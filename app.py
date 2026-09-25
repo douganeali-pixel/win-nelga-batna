@@ -335,9 +335,11 @@ def add_place():
                 description,
                 latitude,
                 longitude,
-                image
+                image,
+                source,
+                verified_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
         """, (
             name,
             category,
@@ -346,7 +348,8 @@ def add_place():
             description,
             latitude,
             longitude,
-            image_filename
+            image_filename,
+            request.form.get("source", "إضافة يدوية").strip() or "إضافة يدوية"
         ))
 
         conn.commit()
@@ -633,7 +636,9 @@ def edit_place(place_id):
                 image = ?,
                 opening_time = ?,
                 closing_time = ?,
-                working_days = ?
+                working_days = ?,
+                source = ?,
+                verified_at = CURRENT_TIMESTAMP
             WHERE id = ?
         """, (
             name,
@@ -647,6 +652,7 @@ def edit_place(place_id):
             request.form.get("opening_time", "08:00").strip() or "08:00",
             request.form.get("closing_time", "18:00").strip() or "18:00",
             request.form.get("working_days", "1,2,3,4,5,6").strip() or "1,2,3,4,5,6",
+            request.form.get("source", place_data["source"] if "source" in place_data.keys() else "إضافة يدوية").strip() or "إضافة يدوية",
             place_id
         ))
 
