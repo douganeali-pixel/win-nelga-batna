@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3
+import psycopg2
+from psycopg2.extras import DictCursor
 import os
 import uuid
 
@@ -33,7 +34,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
 
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "change-me-before-production")
 
-DATABASE = "database.db"
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 UPLOAD_FOLDER = "static/uploads"
 
@@ -48,10 +49,66 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # قاعدة البيانات
 # =========================
 
+class DBCursor:
+    def __init__(self, cursor, lastrowid=None):
+        self._cursor = cursor
+        self._lastrowid = lastrowid
+
+    @property
+    def lastrowid(self):
+        return self._lastrowid
+
+    def fetchone(self):
+        return self._cursor.fetchone()
+
+    def fetchall(self):
+        return self._cursor.fetchall()
+
+
+class DBConnection:
+    def __init__(self):
+        if not DATABASE_URL:
+            raise RuntimeError(
+                "DATABASE_URL غير موجود في Environment Variables"
+            )
+
+        self.conn = psycopg2.connect(
+            DATABASE_URL,
+            cursor_factory=DictCursor
+        )
+
+    def execute(self, query, params=None):
+        query = query.replace("?", "%s")
+
+        is_places_insert = (
+            query.strip().upper().startswith("INSERT INTO PLACES")
+            and "RETURNING ID" not in query.upper()
+        )
+
+        if is_places_insert:
+            query = query.rstrip().rstrip(";") + " RETURNING id"
+
+        cursor = self.conn.cursor()
+        cursor.execute(query, params)
+
+        lastrowid = None
+
+        if is_places_insert:
+            row = cursor.fetchone()
+            if row:
+                lastrowid = row["id"]
+
+        return DBCursor(cursor, lastrowid)
+
+    def commit(self):
+        self.conn.commit()
+
+    def close(self):
+        self.conn.close()
+
+
 def get_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return DBConnection()
 
 
 def allowed_file(filename):
@@ -98,56 +155,51 @@ def init_db():
 
     conn = get_db()
 
-    # جدول الأماكن
     conn.execute("""
         CREATE TABLE IF NOT EXISTS places (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
             category TEXT NOT NULL,
             address TEXT NOT NULL,
             phone TEXT,
             description TEXT,
-            latitude REAL,
-            longitude REAL,
-            image TEXT
+            latitude DOUBLE PRECISION,
+            longitude DOUBLE PRECISION,
+            image TEXT,
+            opening_time TEXT DEFAULT '08:00',
+            closing_time TEXT DEFAULT '18:00',
+            working_days TEXT DEFAULT '1,2,3,4,5,6'
         )
     """)
 
-    conn.commit()
-
-    # التأكد من وجود الأعمدة القديمة
-    columns = conn.execute(
-        "PRAGMA table_info(places)"
-    ).fetchall()
-
-    column_names = [column["name"] for column in columns]
-
-    if "latitude" not in column_names:
-        conn.execute(
-            "ALTER TABLE places ADD COLUMN latitude REAL"
-        )
-
-    if "longitude" not in column_names:
-        conn.execute(
-            "ALTER TABLE places ADD COLUMN longitude REAL"
-        )
-
-    if "image" not in column_names:
-        conn.execute(
-            "ALTER TABLE places ADD COLUMN image TEXT"
-        )
-
-    # جدول التقييمات
     conn.execute("""
         CREATE TABLE IF NOT EXISTS reviews (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             place_id INTEGER NOT NULL,
             name TEXT,
             rating INTEGER NOT NULL,
             comment TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (place_id) REFERENCES places(id)
+            FOREIGN KEY (place_id)
+            REFERENCES places(id)
+            ON DELETE CASCADE
         )
+    """)
+
+    # في حالة وجود جدول قديم، نضيف الأعمدة الناقصة
+    conn.execute("""
+        ALTER TABLE places
+        ADD COLUMN IF NOT EXISTS opening_time TEXT DEFAULT '08:00'
+    """)
+
+    conn.execute("""
+        ALTER TABLE places
+        ADD COLUMN IF NOT EXISTS closing_time TEXT DEFAULT '18:00'
+    """)
+
+    conn.execute("""
+        ALTER TABLE places
+        ADD COLUMN IF NOT EXISTS working_days TEXT DEFAULT '1,2,3,4,5,6'
     """)
 
     conn.commit()
@@ -877,3 +929,8 @@ if __name__ == "__main__":
     app.run(
         debug=True
     )
+
+init_db()
+
+if __name__ == "__main__":
+    app.run(debug=True)

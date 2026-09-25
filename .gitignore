@@ -9,3 +9,11 @@ backups/
 backups-*/
 static/uploads/*
 !static/uploads/.gitkeep
+
+# Local backup files
+app.py.backup
+app.py.sqlite-backup
+database.db.backup
+requirements.txt.backup
+__pycache__/
+*.pyc
