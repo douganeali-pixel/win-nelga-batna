@@ -29,9 +29,9 @@ def service_worker():
 # إعدادات التطبيق
 # =========================
 
-app.secret_key = "win-nelga-batna-secret-2026"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
 
-ADMIN_PASSWORD = "Batna2026"
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "change-me-before-production")
 
 DATABASE = "database.db"
 
