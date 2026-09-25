@@ -216,6 +216,128 @@ def init_db():
     conn.close()
 
 
+
+def seed_initial_places():
+    """إضافة الدفعة الأولى من مؤسسات باتنة مرة واحدة فقط."""
+    places = [
+        (
+            "SARL TIRSAM",
+            "سيارات وقطع غيار",
+            "Z.I Kechida, Batna",
+            "033 92 14 40",
+            "شركة لخدمات السيارات وقطع الغيار.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "NARAUTO",
+            "سيارات وقطع غيار",
+            "Lotissement Djerouedhib, Route de Biskra, Batna",
+            "033 81 69 69",
+            "خدمات وقطع غيار السيارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "BATNA MOTORS",
+            "سيارات",
+            "Cité Riadh, en face Casnos, Batna",
+            "033 92 35 10",
+            "خدمات مرتبطة بالسيارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "EURL MAHDI AUTO",
+            "سيارات وقطع غيار",
+            "19 Bd du 19 Mars, Route de Biskra, Batna",
+            "033 86 00 36 / 033 86 02 70",
+            "خدمات وقطع غيار السيارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "KIA AUTO FERHAT",
+            "سيارات وقطع غيار",
+            "Zone Industrielle Kechida, Batna",
+            "033 92 14 41",
+            "خدمات السيارات وقطع الغيار.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "SM Turbo",
+            "سيارات وقطع غيار",
+            "Batna, Algeria",
+            "0697 53 46 43",
+            "بيع سيارات متعددة العلامات وخدمات تركيب وإصلاح وتشخيص التوربو.",
+            "SM Turbo - Sep 2026"
+        ),
+        (
+            "Kherraf Automobile",
+            "صيانة السيارات",
+            "Avenue de la Gare, Batna",
+            "0660 71 55 17",
+            "صيانة وإصلاح السيارات، ميكانيك، كهرباء وتشخيص أعطال.",
+            "Kherraf Automobile - Aug 2026"
+        ),
+        (
+            "Massinissa Lounge",
+            "مطاعم وحلويات",
+            "02 Avenue de l'Indépendance, Batna",
+            "0550 53 53 53",
+            "مطعم وصالة في باتنة.",
+            "Vymaps - Sep 2026"
+        ),
+        (
+            "Planet Food",
+            "مطاعم وحلويات",
+            "Rue de l'Aures, Batna",
+            "0550 38 09 01",
+            "مطعم في باتنة.",
+            "Vymaps - Sep 2026"
+        ),
+        (
+            "SAE-EXACT Centre Batna",
+            "خدمات",
+            "Batna, Algeria",
+            "033 25 38 18 / 0561 52 52 36",
+            "مركز خبرة ومراقبة تقنية للسيارات وخدمات الخبرة.",
+            "SAE-EXACT - Sep 2026"
+        )
+    ]
+
+    conn = get_db()
+
+    try:
+        for name, category, address, phone, description, source in places:
+            existing = conn.execute(
+                "SELECT id FROM places WHERE name = ? LIMIT 1",
+                (name,)
+            ).fetchone()
+
+            if existing is None:
+                conn.execute("""
+                    INSERT INTO places
+                    (
+                        name,
+                        category,
+                        address,
+                        phone,
+                        description,
+                        source,
+                        verified_at
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                """, (
+                    name,
+                    category,
+                    address,
+                    phone,
+                    description,
+                    source
+                ))
+
+        conn.commit()
+    finally:
+        conn.close()
+
+
 # =========================
 # الصفحة الرئيسية
 # =========================
@@ -947,6 +1069,7 @@ if __name__ == "__main__":
     )
 
 init_db()
+seed_initial_places()
 
 if __name__ == "__main__":
     app.run(debug=True)
