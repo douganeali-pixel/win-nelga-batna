@@ -202,6 +202,16 @@ def init_db():
         ADD COLUMN IF NOT EXISTS working_days TEXT DEFAULT '1,2,3,4,5,6'
     """)
 
+    conn.execute("""
+        ALTER TABLE places
+        ADD COLUMN IF NOT EXISTS source TEXT
+    """)
+
+    conn.execute("""
+        ALTER TABLE places
+        ADD COLUMN IF NOT EXISTS verified_at TIMESTAMP
+    """)
+
     conn.commit()
     conn.close()
 
