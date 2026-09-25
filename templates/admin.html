@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>لوحة الإدارة - وين نلقى باتنة؟</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Tahoma, sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+header {
+    background: linear-gradient(
+        135deg,
+        #1d4ed8,
+        #2563eb,
+        #3b82f6
+    );
+
+    color: white;
+    padding: 20px;
+}
+
+.header {
+    max-width: 1100px;
+    margin: auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.header-button {
+    color: white;
+    text-decoration: none;
+
+    border: 1px solid rgba(255,255,255,.4);
+
+    padding: 9px 14px;
+
+    border-radius: 9px;
+}
+
+.header-button:hover {
+    background: white;
+    color: #2563eb;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+.dashboard {
+    background: white;
+    padding: 22px;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 5px 20px rgba(15,23,42,.06);
+
+    margin-bottom: 22px;
+}
+
+.dashboard h1 {
+    margin: 0 0 8px;
+}
+
+.dashboard p {
+    color: #64748b;
+    margin: 0;
+}
+
+.count {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    padding: 8px 13px;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+}
+
+.grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.card {
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 18px rgba(15,23,42,.05);
+}
+
+.image-wrapper {
+    height: 210px;
+    background: #e2e8f0;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.no-image {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #64748b;
+}
+
+.content {
+    padding: 17px;
+}
+
+.name {
+    font-size: 19px;
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+.category {
+    display: inline-block;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+
+    margin-bottom: 10px;
+}
+
+.address {
+    color: #64748b;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+.phone {
+    color: #16a34a;
+
+    font-weight: bold;
+
+    margin-top: 8px;
+}
+
+.actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 15px;
+}
+
+.action {
+    text-align: center;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.details {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.edit {
+    background: #2563eb;
+    color: white;
+}
+
+.delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.empty {
+    background: white;
+
+    padding: 50px;
+
+    text-align: center;
+
+    border-radius: 16px;
+
+    color: #64748b;
+}
+
+@media (max-width: 850px) {
+
+    .grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .header {
+        flex-direction: column;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+<div class="header">
+
+<div class="logo">
+وين نلقى باتنة؟
+</div>
+
+<div class="header-buttons">
+
+<a
+class="header-button"
+href="{{ url_for('home') }}"
+>
+الرئيسية
+</a>
+
+<a
+class="header-button"
+href="{{ url_for('admin_logout') }}"
+>
+تسجيل الخروج
+</a>
+
+</div>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+
+<section class="dashboard">
+
+<h1>
+لوحة الإدارة
+</h1>
+
+<p>
+إدارة جميع الأماكن والمحلات المسجلة في الدليل
+</p>
+
+<span class="count">
+عدد الأماكن: {{ places|length }}
+</span>
+
+</section>
+
+
+{% if places %}
+
+<div class="grid">
+
+
+{% for place in places %}
+
+<article class="card">
+
+
+<div class="image-wrapper">
+
+{% if place.image %}
+
+<img
+class="image"
+src="{{ url_for(
+    'static',
+    filename='uploads/' + place.image
+) }}"
+alt="{{ place.name }}"
+>
+
+{% else %}
+
+<div class="no-image">
+لا توجد صورة
+</div>
+
+{% endif %}
+
+</div>
+
+
+<div class="content">
+
+<div class="name">
+{{ place.name }}
+</div>
+
+
+<span class="category">
+{{ place.category }}
+</span>
+
+
+<div class="address">
+{{ place.address }}
+</div>
+
+
+{% if place.phone %}
+
+<div class="phone">
+☎ {{ place.phone }}
+</div>
+
+{% endif %}
+
+
+<div class="actions">
+
+
+<a
+class="action details"
+href="{{ url_for(
+    'place',
+    place_id=place.id
+) }}"
+>
+التفاصيل
+</a>
+
+
+<a
+class="action edit"
+href="{{ url_for(
+    'edit_place',
+    place_id=place.id
+) }}"
+>
+تعديل
+</a>
+
+
+<form
+style="margin:0"
+method="POST"
+action="{{ url_for(
+    'delete_place',
+    place_id=place.id
+) }}"
+onsubmit="return confirm('هل أنت متأكد من حذف هذا المكان؟');"
+>
+
+<button
+class="action delete"
+type="submit"
+style="width:100%"
+>
+حذف
+</button>
+
+</form>
+
+
+</div>
+
+</div>
+
+</article>
+
+{% endfor %}
+
+
+</div>
+
+{% else %}
+
+<div class="empty">
+
+لا توجد أماكن مسجلة حاليًا.
+
+</div>
+
+{% endif %}
+
+
+</main>
+
+</body>
+
+</html>

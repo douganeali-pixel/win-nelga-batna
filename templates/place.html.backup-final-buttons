@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>{{ place.name }} - وين نلقى باتنة؟</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #080808;
+    --dark: #111111;
+    --card: #ffffff;
+    --background: #f5f5f5;
+    --text: #111111;
+    --muted: #737373;
+    --border: #e5e5e5;
+    --green: #16a34a;
+    --red: #dc2626;
+}
+
+body {
+    margin: 0;
+    font-family: "Cairo", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(
+        135deg,
+        #050505,
+        #111111,
+        #1b1b1b
+    );
+
+    color: white;
+    padding: 18px 20px;
+}
+
+.header {
+    max-width: 1050px;
+    margin: auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    color: white;
+    text-decoration: none;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.back {
+    color: white;
+    text-decoration: none;
+
+    border: 1px solid rgba(255,255,255,.2);
+
+    background: rgba(255,255,255,.06);
+
+    padding: 8px 15px;
+
+    border-radius: 9px;
+}
+
+.back:hover {
+    background: white;
+    color: black;
+}
+
+/* CONTAINER */
+
+.container {
+    max-width: 1050px;
+    margin: 30px auto 60px;
+    padding: 0 15px;
+}
+
+/* MAIN CARD */
+
+.place-card {
+    background: white;
+    border-radius: 22px;
+    overflow: hidden;
+
+    box-shadow:
+        0 12px 40px rgba(0,0,0,.08);
+
+    border: 1px solid var(--border);
+}
+
+/* IMAGE */
+
+.image-wrapper {
+    width: 100%;
+    height: 430px;
+    background: #e5e5e5;
+}
+
+.place-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--muted);
+    font-size: 16px;
+}
+
+/* CONTENT */
+
+.content {
+    padding: 30px;
+}
+
+.category {
+    display: inline-block;
+
+    background: #f1f1f1;
+    color: #222;
+
+    padding: 6px 12px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    margin-bottom: 12px;
+}
+
+h1 {
+    margin: 0 0 15px;
+
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+
+    margin: 20px 0;
+}
+
+.info-box {
+    background: #fafafa;
+
+    border: 1px solid var(--border);
+
+    padding: 15px;
+
+    border-radius: 12px;
+}
+
+.info-title {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.phone {
+    color: var(--green);
+}
+
+.description {
+    border-top: 1px solid var(--border);
+
+    padding-top: 20px;
+
+    color: #525252;
+
+    line-height: 2;
+
+    font-size: 15px;
+}
+
+/* BUTTONS */
+
+.actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.action {
+    display: block;
+
+    text-align: center;
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    transition: .2s;
+}
+
+.call {
+    background: #16a34a;
+    color: white;
+}
+
+.whatsapp-button {
+    background: #16a34a;
+    color: white;
+}
+
+.whatsapp-button:hover {
+    background: #15803d;
+}
+
+.share-button {
+    background: #111111;
+    color: white;
+}
+
+.share-button:hover {
+    background: #000000;
+}
+
+.map-button {
+    background: #111111;
+    color: white;
+}
+
+.call:hover,
+.map-button:hover {
+    opacity: .85;
+}
+
+/* MAP */
+
+.map-section {
+    margin-top: 25px;
+
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.05);
+}
+
+.map-section h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+#map {
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ADMIN */
+
+.admin-buttons {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+.edit-button,
+.delete-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    border: none;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    font-family: inherit;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.edit-button {
+    background: #f1f1f1;
+    color: #111;
+}
+
+.delete-button {
+    background: #fee2e2;
+    color: var(--red);
+}
+
+/* REVIEWS */
+
+.reviews-section {
+    margin-top: 25px;
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    border: 1px solid var(--border);
+}
+
+.reviews-section h2 {
+    margin-top: 0;
+}
+
+.rating-summary {
+    text-align: center;
+
+    background: #fafafa;
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    margin-bottom: 22px;
+}
+
+.rating-number {
+    font-size: 38px;
+    font-weight: 800;
+}
+
+.stars {
+    color: #f59e0b;
+
+    font-size: 24px;
+
+    letter-spacing: 2px;
+}
+
+.review-form input,
+.review-form textarea,
+.review-form select {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    margin: 7px 0 14px;
+
+    font-family: inherit;
+}
+
+.review-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.review-button {
+    width: 100%;
+
+    border: none;
+
+    background: #111;
+
+    color: white;
+
+    padding: 13px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.review {
+    border-top: 1px solid var(--border);
+
+    padding: 16px 0;
+}
+
+.review-name {
+    font-weight: 700;
+}
+
+.review-comment {
+    color: var(--muted);
+
+    margin-top: 5px;
+}
+
+/* FOOTER */
+
+footer {
+    background: #080808;
+
+    color: #999;
+
+    text-align: center;
+
+    padding: 28px 15px;
+
+    font-size: 13px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* MOBILE */
+
+@media(max-width:650px) {
+
+    .header {
+        flex-direction: column;
+    }
+
+    .image-wrapper {
+        height: 280px;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .info {
+        grid-template-columns: 1fr;
+    }
+
+    .actions,
+    .admin-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    #map {
+        height: 320px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+<div class="header">
+
+<a
+class="logo"
+href="{{ url_for('home') }}"
+>
+وين نلقى باتنة؟
+</a>
+
+<a
+class="back"
+href="{{ url_for('home') }}"
+>
+الرئيسية
+</a>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- PLACE -->
+
+<article class="place-card">
+
+
+<div class="image-wrapper">
+
+{% if place.image %}
+
+<img
+class="place-image"
+src="{{ url_for(
+    'static',
+    filename='uploads/' + place.image
+) }}"
+alt="{{ place.name }}"
+>
+
+{% else %}
+
+<div class="no-image">
+لا توجد صورة لهذا المكان
+</div>
+
+{% endif %}
+
+</div>
+
+
+<div class="content">
+
+
+<span class="category">
+{{ place.category }}
+</span>
+
+
+<h1>
+{{ place.name }}
+</h1>
+
+
+<div class="info">
+
+
+<div class="info-box">
+
+<div class="info-title">
+العنوان
+</div>
+
+<div class="info-value">
+{{ place.address }}
+</div>
+
+</div>
+
+
+{% if place.phone %}
+
+<div class="info-box">
+
+<div class="info-title">
+الهاتف
+</div>
+
+<div class="info-value phone">
+{{ place.phone }}
+</div>
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+
+{% if place.description %}
+
+<div class="description">
+
+{{ place.description }}
+
+</div>
+
+{% endif %}
+
+
+<div class="actions">
+
+
+{% if place.phone %}
+
+<a
+class="action call"
+href="tel:{{ place.phone }}"
+>
+اتصل الآن
+</a>
+
+{% endif %}
+
+
+{% if place.phone %}
+<a
+class="action whatsapp-button"
+href="https://wa.me/213{{ place.phone|replace(' ','')|replace('-','')|replace('.','')|replace('0','',1) }}"
+target="_blank"
+>
+واتساب
+</a>
+{% endif %}
+
+{% if place.latitude and place.longitude %}
+<a
+class="action map-button"
+href="https://www.google.com/maps/search/?api=1&query={{ place.latitude }},{{ place.longitude }}"
+target="_blank"
+>
+فتح الخريطة
+</a>
+{% endif %}
+
+<button
+type="button"
+class="action share-button"
+onclick="sharePlace()"
+>
+مشاركة المكان
+</button>
+
+
+</div>
+
+
+{% if session.get('admin') %}
+
+<div class="admin-buttons">
+
+
+<a
+class="edit-button"
+href="{{ url_for(
+    'edit_place',
+    place_id=place.id
+) }}"
+>
+تعديل المحل
+</a>
+
+
+<form
+method="POST"
+action="{{ url_for(
+    'delete_place',
+    place_id=place.id
+) }}"
+onsubmit="return confirm('هل أنت متأكد من حذف هذا المحل؟');"
+>
+
+<button
+class="delete-button"
+type="submit"
+>
+حذف المحل
+</button>
+
+</form>
+
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+</article>
+
+
+<!-- MAP -->
+
+{% if place.latitude and place.longitude %}
+
+<section class="map-section">
+
+<h2>
+موقع المحل
+</h2>
+
+<div id="map"></div>
+
+</section>
+
+{% endif %}
+
+
+<!-- REVIEWS -->
+
+<section class="reviews-section">
+
+<h2>
+تقييمات وآراء الزوار
+</h2>
+
+
+<div class="rating-summary">
+
+<div class="rating-number">
+{{ average }}/5
+</div>
+
+
+<div class="stars">
+
+{% if average >= 1 %}★{% else %}☆{% endif %}
+{% if average >= 2 %}★{% else %}☆{% endif %}
+{% if average >= 3 %}★{% else %}☆{% endif %}
+{% if average >= 4 %}★{% else %}☆{% endif %}
+{% if average >= 5 %}★{% else %}☆{% endif %}
+
+</div>
+
+
+<div>
+عدد التقييمات: {{ reviews|length }}
+</div>
+
+</div>
+
+
+<form
+class="review-form"
+method="POST"
+action="{{ url_for(
+    'add_review',
+    place_id=place.id
+) }}"
+>
+
+
+<label>
+اسمك
+</label>
+
+<input
+type="text"
+name="name"
+placeholder="اختياري"
+>
+
+
+<label>
+التقييم
+</label>
+
+<select
+name="rating"
+required
+>
+
+<option value="5">
+★★★★★ ممتاز
+</option>
+
+<option value="4">
+★★★★ جيد جدًا
+</option>
+
+<option value="3">
+★★★ جيد
+</option>
+
+<option value="2">
+★★ مقبول
+</option>
+
+<option value="1">
+★ ضعيف
+</option>
+
+</select>
+
+
+<label>
+تعليقك
+</label>
+
+<textarea
+name="comment"
+placeholder="اكتب رأيك عن المكان..."
+></textarea>
+
+
+<button
+class="review-button"
+type="submit"
+>
+إرسال التقييم
+</button>
+
+
+</form>
+
+
+{% for review in reviews %}
+
+<div class="review">
+
+<div class="review-name">
+{{ review.name or "زائر" }}
+</div>
+
+
+<div class="stars">
+
+{% for i in range(review.rating) %}
+★
+{% endfor %}
+
+</div>
+
+
+{% if review.comment %}
+
+<div class="review-comment">
+{{ review.comment }}
+</div>
+
+{% endif %}
+
+</div>
+
+{% else %}
+
+<p style="color:#737373;text-align:center">
+لا توجد تقييمات حتى الآن.
+</p>
+
+{% endfor %}
+
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+وين نلقى باتنة؟
+</strong>
+
+<br>
+
+دليلك المحلي للعثور على الأماكن والخدمات في باتنة
+
+</footer>
+
+
+{% if place.latitude and place.longitude %}
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<script>
+
+const latitude = {{ place.latitude }};
+const longitude = {{ place.longitude }};
+
+const map = L.map("map").setView(
+    [latitude, longitude],
+    16
+);
+
+L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        attribution:
+            "&copy; OpenStreetMap contributors"
+    }
+).addTo(map);
+
+L.marker([
+    latitude,
+    longitude
+])
+.addTo(map)
+.bindPopup(
+    "{{ place.name }}"
+)
+.openPopup();
+
+</script>
+
+{% endif %}
+
+
+
+<script>
+function sharePlace() {
+    const data = {
+        title: "{{ place.name }}",
+        text: "شاهد هذا المكان على وين نلقى باتنة؟",
+        url: window.location.href
+    };
+
+    if (navigator.share) {
+        navigator.share(data);
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("تم نسخ رابط المكان");
+    }
+}
+</script>
+
+</body>
+
+</html>

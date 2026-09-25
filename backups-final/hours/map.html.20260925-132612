@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>خريطة باتنة - وين نلقى باتنة؟</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:"Cairo",sans-serif;
+    background:#f5f5f5;
+    color:#111;
+}
+
+header{
+    background:linear-gradient(135deg,#050505,#111,#1c1c1c);
+    color:white;
+    padding:18px 20px;
+}
+
+.header{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.logo{
+    color:white;
+    text-decoration:none;
+    font-size:22px;
+    font-weight:900;
+}
+
+.logo span{color:#d4af37}
+
+.home{
+    color:white;
+    text-decoration:none;
+    padding:8px 16px;
+    border:1px solid #444;
+    border-radius:9px;
+}
+
+.container{
+    max-width:1200px;
+    margin:20px auto 50px;
+    padding:0 15px;
+}
+
+.controls{
+    display:grid;
+    grid-template-columns:1fr 180px auto auto;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+input,select,button{
+    height:44px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:0 12px;
+    font-family:inherit;
+    background:white;
+}
+
+button{
+    background:#111;
+    color:white;
+    cursor:pointer;
+    font-weight:700;
+}
+
+button:hover{background:#000}
+
+.count{
+    color:#555;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+#map{
+    width:100%;
+    height:600px;
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid #ddd;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+.popup{
+    min-width:210px;
+    text-align:right;
+    font-family:"Cairo",sans-serif;
+}
+
+.popup-title{
+    font-size:17px;
+    font-weight:900;
+    margin-bottom:5px;
+}
+
+.popup-category{
+    display:inline-block;
+    background:#f1f1f1;
+    padding:3px 8px;
+    border-radius:10px;
+    font-size:11px;
+    margin-bottom:6px;
+}
+
+.popup-rating{
+    color:#f59e0b;
+    font-weight:800;
+    margin:4px 0;
+}
+
+.popup-address{
+    color:#666;
+    font-size:12px;
+    margin:5px 0;
+}
+
+.popup-button{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    background:#111;
+    color:white !important;
+    padding:8px;
+    border-radius:7px;
+    margin-top:8px;
+    font-weight:700;
+}
+
+@media(max-width:700px){
+    .controls{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .controls input{
+        grid-column:1/-1;
+    }
+
+    #map{
+        height:520px;
+    }
+
+    .header{
+        flex-direction:column;
+    }
+}
+</style>
+<meta name="description" content="وين نلقى باتنة؟ دليل محلي للعثور على المحلات والخدمات والأماكن في مدينة باتنة.">
+<meta name="theme-color" content="#080808">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+</head>
+
+<body>
+
+<header>
+<div class="header">
+    <a class="logo" href="/">
+        وين نلقى <span>باتنة؟</span>
+    </a>
+
+    <a class="home" href="/">
+        الرئيسية
+    </a>
+</div>
+</header>
+
+<main class="container">
+
+<div class="controls">
+
+    <input
+        id="search"
+        type="text"
+        placeholder="ابحث عن مكان..."
+        autocomplete="off"
+    >
+
+    <select id="category">
+        <option value="">كل التصنيفات</option>
+        {% for place in places %}
+            {% if place.category %}
+                <option value="{{ place.category }}">{{ place.category }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+
+    <button onclick="resetMap()">
+        إعادة ضبط
+    </button>
+
+    <button onclick="locateUser()">
+        موقعي الحالي
+    </button>
+
+</div>
+
+<div class="count" id="count"></div>
+
+<div id="map"></div>
+
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+const places = [
+{% for place in places %}
+{
+    id: {{ place.id }},
+    name: {{ place.name|tojson }},
+    category: {{ (place.category or '')|tojson }},
+    address: {{ (place.address or '')|tojson }},
+    phone: {{ (place.phone or '')|tojson }},
+    latitude: {{ place.latitude|float }},
+    longitude: {{ place.longitude|float }},
+    average: {{ (place.average_rating or 0)|float }},
+    reviews: {{ place.review_count or 0 }}
+},
+{% endfor %}
+];
+
+const batna = [35.5559, 6.1741];
+
+const map = L.map("map").setView(batna, 13);
+
+L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom:19,
+        attribution:"&copy; OpenStreetMap contributors"
+    }
+).addTo(map);
+
+let markers = [];
+
+function stars(value){
+    let result = "";
+
+    for(let i=1;i<=5;i++){
+        result += value >= i ? "★" : "☆";
+    }
+
+    return result;
+}
+
+function popup(place){
+
+    let rating = "";
+
+    if(place.reviews > 0){
+        rating = `
+            <div class="popup-rating">
+                ${stars(place.average)}
+                ${place.average}/5
+                (${place.reviews} تقييم)
+            </div>
+        `;
+    }else{
+        rating = `
+            <div style="color:#999;font-size:12px">
+                لا توجد تقييمات
+            </div>
+        `;
+    }
+
+    return `
+        <div class="popup">
+
+            <div class="popup-title">
+                ${place.name}
+            </div>
+
+            <div class="popup-category">
+                ${place.category}
+            </div>
+
+            ${rating}
+
+            <div class="popup-address">
+                ${place.address}
+            </div>
+
+            <a
+                class="popup-button"
+                href="/place/${place.id}"
+            >
+                مشاهدة التفاصيل
+            </a>
+
+        </div>
+    `;
+}
+
+function showPlaces(){
+
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+
+    const query =
+        document.getElementById("search").value
+        .trim()
+        .toLowerCase();
+
+    const category =
+        document.getElementById("category").value;
+
+    const filtered = places.filter(place => {
+
+        const text = (
+            place.name + " " +
+            place.category + " " +
+            place.address
+        ).toLowerCase();
+
+        const searchOK =
+            !query || text.includes(query);
+
+        const categoryOK =
+            !category || place.category === category;
+
+        return searchOK && categoryOK;
+    });
+
+    filtered.forEach(place => {
+
+        const marker = L.marker([
+            place.latitude,
+            place.longitude
+        ])
+        .addTo(map)
+        .bindPopup(popup(place));
+
+        markers.push(marker);
+    });
+
+    document.getElementById("count").textContent =
+        "الأماكن الموجودة على الخريطة: " + filtered.length;
+
+    if(filtered.length === 1){
+        map.setView(
+            [filtered[0].latitude, filtered[0].longitude],
+            16
+        );
+    }
+}
+
+function resetMap(){
+
+    document.getElementById("search").value = "";
+    document.getElementById("category").value = "";
+
+    map.setView(batna,13);
+
+    showPlaces();
+}
+
+function locateUser(){
+
+    if(!navigator.geolocation){
+        alert("المتصفح لا يدعم تحديد الموقع.");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        position => {
+
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            map.setView([lat,lng],16);
+
+            L.marker([lat,lng])
+                .addTo(map)
+                .bindPopup("موقعك الحالي")
+                .openPopup();
+        },
+        () => {
+            alert("تعذر الحصول على موقعك الحالي.");
+        }
+    );
+}
+
+document
+    .getElementById("search")
+    .addEventListener("input",showPlaces);
+
+document
+    .getElementById("category")
+    .addEventListener("change",showPlaces);
+
+showPlaces();
+
+</script>
+
+
+<button id="back-to-top"
+style="
+position:fixed;
+bottom:20px;
+left:20px;
+display:none;
+width:44px;
+height:44px;
+border:0;
+border-radius:50%;
+background:#080808;
+color:white;
+font-size:20px;
+cursor:pointer;
+z-index:9999;
+box-shadow:0 4px 18px rgba(0,0,0,.25);
+">↑</button>
+
+<script>
+(function(){
+const b=document.getElementById("back-to-top");
+if(!b)return;
+
+window.addEventListener("scroll",function(){
+b.style.display=window.scrollY>300?"block":"none";
+});
+
+b.addEventListener("click",function(){
+window.scrollTo({top:0,behavior:"smooth"});
+});
+})();
+</script>
+
+<footer style="
+text-align:center;
+padding:25px 15px;
+color:#888;
+font-size:12px;
+">
+© <span id="current-year"></span> وين نلقى باتنة؟ — جميع الحقوق محفوظة
+</footer>
+
+<script>
+const y=document.getElementById("current-year");
+if(y)y.textContent=new Date().getFullYear();
+</script>
+
+</body>
+</html>

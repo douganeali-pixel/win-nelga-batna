@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>خريطة باتنة - وين نلقى؟</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Cairo", sans-serif;
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        /* HEADER */
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #050505,
+                #111111,
+                #1c1c1c
+            );
+
+            color: white;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.18);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            color: #d4af37;
+        }
+
+        .home-button {
+            color: white;
+            text-decoration: none;
+
+            padding: 9px 18px;
+
+            border-radius: 12px;
+
+            background: rgba(255,255,255,0.08);
+
+            border: 1px solid rgba(255,255,255,0.18);
+
+            font-weight: 600;
+        }
+
+        /* CONTROLS */
+
+        .controls {
+            max-width: 1200px;
+            margin: 25px auto 15px;
+
+            padding: 0 20px;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                220px
+                auto;
+
+            gap: 10px;
+        }
+
+        .controls input,
+        .controls select,
+        .reset-button {
+
+            height: 48px;
+
+            border-radius: 12px;
+
+            border: 1px solid #ddd;
+
+            background: white;
+
+            font-family: "Cairo", sans-serif;
+
+            padding: 0 15px;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        .controls input:focus,
+        .controls select:focus {
+            border-color: #111;
+        }
+
+        .reset-button {
+            background: #111;
+            color: white;
+
+            border: none;
+
+            padding: 0 22px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+        }
+
+        .reset-button:hover {
+            background: #000;
+        }
+
+        /* STATS */
+
+        .stats {
+            max-width: 1200px;
+            margin: 0 auto 15px;
+
+            padding: 0 20px;
+
+            color: #666;
+
+            font-size: 14px;
+        }
+
+        .stats strong {
+            color: #111;
+        }
+
+        /* MAP */
+
+        .map-wrapper {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px 40px;
+        }
+
+        #map {
+            width: 100%;
+            height: 620px;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,0.12);
+
+            border: 1px solid #ddd;
+        }
+
+        /* POPUP */
+
+        .popup {
+            width: 230px;
+
+            font-family: "Cairo", sans-serif;
+
+            direction: rtl;
+            text-align: right;
+        }
+
+        .popup img {
+            width: 100%;
+            height: 130px;
+
+            object-fit: cover;
+
+            border-radius: 10px;
+
+            margin-bottom: 8px;
+        }
+
+        .popup h3 {
+            margin: 4px 0 8px;
+
+            font-size: 17px;
+
+            font-weight: 800;
+        }
+
+        .popup-category {
+            display: inline-block;
+
+            background: #eee;
+
+            padding: 3px 9px;
+
+            border-radius: 15px;
+
+            font-size: 11px;
+
+            margin-bottom: 7px;
+        }
+
+        .popup p {
+            margin: 5px 0;
+
+            color: #555;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+        .popup-buttons {
+            display: flex;
+
+            gap: 6px;
+
+            margin-top: 10px;
+        }
+
+        .popup-buttons a {
+            flex: 1;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            background: #111;
+
+            color: white;
+
+            padding: 7px 5px;
+
+            border-radius: 8px;
+
+            font-family: "Cairo", sans-serif;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+        .popup-buttons a.call {
+            background: #333;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #080808;
+
+            color: #999;
+
+            text-align: center;
+
+            padding: 25px 15px;
+
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .header-content {
+                flex-direction: column;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            #map {
+                height: 500px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="header-content">
+
+            <a href="/" class="logo">
+                وين نلقى <span>باتنة؟</span>
+            </a>
+
+            <a href="/" class="home-button">
+                الرئيسية
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTROLS -->
+
+    <div class="controls">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="ابحث عن مكان..."
+            autocomplete="off"
+        >
+
+        <select id="categoryFilter">
+
+            <option value="">
+                كل التصنيفات
+            </option>
+
+            <option value="مطعم">
+                مطاعم
+            </option>
+
+            <option value="حلويات">
+                حلويات
+            </option>
+
+            <option value="مخبزة">
+                مخابز
+            </option>
+
+            <option value="ملابس">
+                ملابس
+            </option>
+
+            <option value="إلكترونيات">
+                إلكترونيات
+            </option>
+
+            <option value="قطع غيار">
+                قطع غيار
+            </option>
+
+            <option value="خدمات">
+                خدمات
+            </option>
+
+            <option value="طبيب">
+                أطباء
+            </option>
+
+            <option value="صيدلية">
+                صيدليات
+            </option>
+
+            <option value="أخرى">
+                أخرى
+            </option>
+
+        </select>
+
+        <button
+            class="reset-button"
+            onclick="resetFilters()"
+        >
+            إعادة ضبط
+        </button>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        الأماكن الموجودة على الخريطة:
+
+        <strong id="placeCount">
+            {{ places|length }}
+        </strong>
+
+    </div>
+
+
+    <!-- MAP -->
+
+    <div class="map-wrapper">
+
+        <div id="map"></div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <strong>
+            وين نلقى باتنة؟
+        </strong>
+
+        <br>
+
+        دليل الأماكن والخدمات في مدينة باتنة
+
+    </footer>
+
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+
+        // مركز مدينة باتنة
+
+        const map = L.map("map").setView(
+            [35.5559, 6.1741],
+            13
+        );
+
+
+        // OpenStreetMap
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+                attribution: "&copy; OpenStreetMap"
+            }
+        ).addTo(map);
+
+
+        // جميع الأماكن
+
+        const places = [
+
+            {% for place in places %}
+
+            {
+                id: {{ place.id }},
+
+                name: {{ place.name|tojson }},
+
+                category: {{ place.category|tojson }},
+
+                address: {{ place.address|tojson }},
+
+                phone: {{ (place.phone or "")|tojson }},
+
+                description: {{ (place.description or "")|tojson }},
+
+                latitude: {{ place.latitude }},
+
+                longitude: {{ place.longitude }},
+
+                image:
+                    {% if place.image %}
+                        {{ url_for(
+                            "static",
+                            filename="uploads/" + place.image
+                        )|tojson }}
+                    {% else %}
+                        null
+                    {% endif %}
+            }
+
+            {% if not loop.last %}
+                ,
+            {% endif %}
+
+            {% endfor %}
+
+        ];
+
+
+        let markers = [];
+
+
+        // إنشاء العلامات
+
+        function createMarkers() {
+
+            markers.forEach(function(marker) {
+                map.removeLayer(marker);
+            });
+
+            markers = [];
+
+
+            const search =
+                document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase()
+                .trim();
+
+
+            const category =
+                document
+                .getElementById("categoryFilter")
+                .value
+                .toLowerCase()
+                .trim();
+
+
+            let visibleCount = 0;
+
+
+            places.forEach(function(place) {
+
+                const name =
+                    (place.name || "")
+                    .toLowerCase();
+
+                const placeCategory =
+                    (place.category || "")
+                    .toLowerCase();
+
+                const address =
+                    (place.address || "")
+                    .toLowerCase();
+
+
+                const matchesSearch =
+                    !search ||
+                    name.includes(search) ||
+                    placeCategory.includes(search) ||
+                    address.includes(search);
+
+
+                const matchesCategory =
+                    !category ||
+                    placeCategory.includes(category);
+
+
+                if (
+                    matchesSearch &&
+                    matchesCategory
+                ) {
+
+                    let imageHTML = "";
+
+                    if (place.image) {
+
+                        imageHTML = `
+                            <img
+                                src="${place.image}"
+                                alt="${place.name}"
+                            >
+                        `;
+
+                    }
+
+
+                    let phoneHTML = "";
+
+                    if (place.phone) {
+
+                        phoneHTML = `
+                            <p>
+                                الهاتف:
+                                ${place.phone}
+                            </p>
+                        `;
+
+                    }
+
+
+                    const popup = `
+
+                        <div class="popup">
+
+                            ${imageHTML}
+
+                            <span class="popup-category">
+                                ${place.category}
+                            </span>
+
+                            <h3>
+                                ${place.name}
+                            </h3>
+
+                            <p>
+                                العنوان:
+                                ${place.address}
+                            </p>
+
+                            ${phoneHTML}
+
+                            <div class="popup-buttons">
+
+                                <a
+                                    href="/place/${place.id}"
+                                >
+                                    التفاصيل
+                                </a>
+
+                                ${
+                                    place.phone
+                                    ?
+                                    `
+                                    <a
+                                        class="call"
+                                        href="tel:${place.phone}"
+                                    >
+                                        اتصال
+                                    </a>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+
+                    const marker =
+                        L.marker([
+                            place.latitude,
+                            place.longitude
+                        ]);
+
+
+                    marker
+                        .bindPopup(popup)
+                        .addTo(map);
+
+
+                    markers.push(marker);
+
+                    visibleCount++;
+
+                }
+
+            });
+
+
+            document.getElementById(
+                "placeCount"
+            ).textContent = visibleCount;
+
+        }
+
+
+        // البحث
+
+        document
+        .getElementById("searchInput")
+        .addEventListener(
+            "input",
+            createMarkers
+        );
+
+
+        // التصنيف
+
+        document
+        .getElementById("categoryFilter")
+        .addEventListener(
+            "change",
+            createMarkers
+        );
+
+
+        // إعادة الضبط
+
+        function resetFilters() {
+
+            document.getElementById(
+                "searchInput"
+            ).value = "";
+
+            document.getElementById(
+                "categoryFilter"
+            ).value = "";
+
+            createMarkers();
+
+        }
+
+
+        // تشغيل العلامات
+
+        createMarkers();
+
+    </script>
+
+</body>
+
+</html>
