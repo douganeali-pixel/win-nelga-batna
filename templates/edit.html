@@ -764,43 +764,50 @@ let marker = L.marker(
     [
         defaultLatitude,
         defaultLongitude
-    ]
+    ],
+    {
+        draggable: true
+    }
 ).addTo(map);
 
+function updateCoordinates(lat, lng) {
+
+    document.getElementById("latitude").value =
+        lat.toFixed(6);
+
+    document.getElementById("longitude").value =
+        lng.toFixed(6);
+}
+
+marker.on("dragend", function(event) {
+
+    const position = event.target.getLatLng();
+
+    updateCoordinates(
+        position.lat,
+        position.lng
+    );
+
+    marker
+        .bindPopup("الموقع الجديد")
+        .openPopup();
+});
 
 marker.bindPopup(
     "موقع المحل"
 ).openPopup();
 
-
 map.on("click", function(event) {
 
-    const latitude =
-        event.latlng.lat.toFixed(6);
-
-    const longitude =
-        event.latlng.lng.toFixed(6);
-
-
-    document.getElementById(
-        "latitude"
-    ).value = latitude;
-
-
-    document.getElementById(
-        "longitude"
-    ).value = longitude;
-
-
-    marker.setLatLng(
-        event.latlng
+    updateCoordinates(
+        event.latlng.lat,
+        event.latlng.lng
     );
 
+    marker.setLatLng(event.latlng);
 
     marker
-        .bindPopup(
-            "الموقع الجديد"
-        )
+        .bindPopup("الموقع الجديد")
         .openPopup();
 
 });
