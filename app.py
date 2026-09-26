@@ -1421,6 +1421,8 @@ def seed_additional_batna_places():
                 "2026-09-26"
             ))
 
+    conn.commit()
+
     conn.close()
 
 
