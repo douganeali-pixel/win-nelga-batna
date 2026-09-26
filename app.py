@@ -129,6 +129,25 @@ def whatsapp_url(phone):
 
 app.jinja_env.globals["whatsapp_url"] = whatsapp_url
 
+
+def cover_image(place):
+    """
+    إرجاع صورة الغلاف الخاصة بالمؤسسة.
+    إذا لم توجد صورة حقيقية، يستخدم الغلاف الافتراضي.
+    """
+    try:
+        image = place.get("image") if hasattr(place, "get") else place["image"]
+    except Exception:
+        image = None
+
+    if image:
+        return url_for("static", filename=f"uploads/{image}")
+
+    return url_for("static", filename="covers/default-cover.svg")
+
+
+app.jinja_env.globals["cover_image"] = cover_image
+
 def allowed_file(filename):
     return (
         filename
