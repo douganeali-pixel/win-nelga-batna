@@ -351,6 +351,70 @@ href="{{ url_for('admin_logout') }}"
 </section>
 
 
+
+{% if place_requests %}
+
+<section class="dashboard" style="margin-top:30px;">
+    <h2>طلبات إضافة المحلات</h2>
+    <p>طلبات تنتظر المراجعة والموافقة.</p>
+</section>
+
+<div class="grid">
+
+{% for item in place_requests %}
+
+<article class="card">
+    <div class="content">
+
+        <div class="name">{{ item.name }}</div>
+
+        <span class="category">{{ item.category }}</span>
+
+        <div class="address">📍 {{ item.address }}</div>
+
+        {% if item.phone %}
+        <div class="phone">☎ {{ item.phone }}</div>
+        {% endif %}
+
+        {% if item.description %}
+        <div class="description">{{ item.description }}</div>
+        {% endif %}
+
+        <div class="actions">
+
+            <form method="POST"
+                  action="{{ url_for('approve_place_request', request_id=item.id) }}"
+                  style="margin:0">
+
+                <button class="action" type="submit" style="width:100%">
+                    ✓ قبول ونشر
+                </button>
+
+            </form>
+
+            <form method="POST"
+                  action="{{ url_for('reject_place_request', request_id=item.id) }}"
+                  style="margin:0"
+                  onsubmit="return confirm('هل تريد رفض هذا الطلب؟');">
+
+                <button class="action delete" type="submit" style="width:100%">
+                    ✕ رفض
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</article>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+
 {% if places %}
 
 <div class="grid">

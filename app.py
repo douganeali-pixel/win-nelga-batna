@@ -201,9 +201,29 @@ def init_place_requests_table():
             description TEXT,
             latitude DOUBLE PRECISION,
             longitude DOUBLE PRECISION,
+            opening_time TEXT DEFAULT '08:00',
+            closing_time TEXT DEFAULT '18:00',
+            working_days TEXT DEFAULT '1,2,3,4,5,6',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    conn.commit()
+    conn.close()
+
+
+def ensure_place_requests_columns():
+    conn = get_db()
+    for column, definition in [
+        ("opening_time", "TEXT DEFAULT '08:00'"),
+        ("closing_time", "TEXT DEFAULT '18:00'"),
+        ("working_days", "TEXT DEFAULT '1,2,3,4,5,6'")
+    ]:
+        try:
+            conn.execute(
+                f"ALTER TABLE place_requests ADD COLUMN {column} {definition}"
+            )
+        except Exception:
+            pass
     conn.commit()
     conn.close()
 
@@ -635,9 +655,12 @@ def add_place():
                 phone,
                 description,
                 latitude,
-                longitude
+                longitude,
+                opening_time,
+                closing_time,
+                working_days
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             name,
             category,
@@ -645,7 +668,10 @@ def add_place():
             phone,
             description,
             latitude,
-            longitude
+            longitude,
+            opening_time,
+            closing_time,
+            working_days
         ))
 
         conn.commit()
@@ -1181,7 +1207,7 @@ def admin():
 @app.route("/admin/requests")
 def admin_requests():
     if not session.get("admin"):
-        return redirect(url_for("admin_login"))
+        return redirect(url_for("admin"))
 
     conn = get_db()
     requests = conn.execute("""
@@ -1201,7 +1227,7 @@ def admin_requests():
 @app.route("/admin/requests/<int:request_id>/approve", methods=["POST"])
 def approve_place_request(request_id):
     if not session.get("admin"):
-        return redirect(url_for("admin_login"))
+        return redirect(url_for("admin"))
 
     conn = get_db()
 
@@ -1222,10 +1248,13 @@ def approve_place_request(request_id):
                 description,
                 latitude,
                 longitude,
+                opening_time,
+                closing_time,
+                working_days,
                 source,
                 verified_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
         """, (
             item["name"],
             item["category"],
@@ -1234,6 +1263,9 @@ def approve_place_request(request_id):
             item["description"],
             item["latitude"],
             item["longitude"],
+            item["opening_time"],
+            item["closing_time"],
+            item["working_days"],
             "Submitted by business owner"
         ))
 
@@ -1251,7 +1283,7 @@ def approve_place_request(request_id):
 @app.route("/admin/requests/<int:request_id>/reject", methods=["POST"])
 def reject_place_request(request_id):
     if not session.get("admin"):
-        return redirect(url_for("admin_login"))
+        return redirect(url_for("admin"))
 
     conn = get_db()
     conn.execute(
