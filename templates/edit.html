@@ -348,13 +348,6 @@ footer strong {
 }
 
 
-.no-business-images-final,
-.image-wrapper,
-.place-image,
-.business-cover,
-.no-image {
-    display: none !important;
-}
 </style>
 
 </head>
@@ -407,7 +400,6 @@ href="{{ url_for('place', place_id=place.id) }}"
 <form
 class="form-card"
 method="POST"
-enctype="multipart/form-data"
 >
 
 
@@ -574,45 +566,6 @@ value="{{ place.phone or '' }}"
 <textarea
 name="description"
 >{{ place.description or '' }}</textarea>
-
-</div>
-
-</section>
-
-
-<section class="form-section">
-
-<h2 class="section-title">
-الصورة
-</h2>
-
-
-{% if place.image %}
-
-<img
-class="current-image"
-src="{{ url_for('static', filename='uploads/' + place.image) }}"
-alt="{{ place.name }}"
->
-
-{% else %}
-
-<div class="no-image">
-لا توجد صورة حالية
-</div>
-
-{% endif %}
-
-
-<div class="file-box">
-
-
-
-
-
-<p style="color:#64748b;font-size:13px;">
-اترك الحقل فارغًا للاحتفاظ بالصورة الحالية
-</p>
 
 </div>
 

@@ -286,13 +286,6 @@ header {
 }
 
 
-.no-business-images-final,
-.image-wrapper,
-.place-image,
-.business-cover,
-.no-image {
-    display: none !important;
-}
 </style>
 
 </head>
@@ -346,6 +339,10 @@ href="{{ url_for('admin_logout') }}"
 
 <span class="count">
 عدد الأماكن: {{ places|length }}
+</span>
+<br>
+<span class="count">
+طلبات معلقة: {{ place_requests|length }}
 </span>
 
 </section>
@@ -423,30 +420,6 @@ href="{{ url_for('admin_logout') }}"
 {% for place in places %}
 
 <article class="card">
-
-
-<div class="image-wrapper">
-
-{% if place.image %}
-
-<img
-class="image"
-src="{{ url_for(
-    'static',
-    filename='uploads/' + place.image
-) }}"
-alt="{{ place.name }}"
->
-
-{% else %}
-
-<div class="no-image">
-لا توجد صورة
-</div>
-
-{% endif %}
-
-</div>
 
 
 <div class="content">

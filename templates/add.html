@@ -286,6 +286,11 @@
 
 <div class="container">
 
+    {% if error %}
+    <div class="form-error">{{ error }}</div>
+    {% endif %}
+
+
     {% if request.args.get("submitted") == "1" %}
     <div class="success-message">
         تم إرسال طلبك بنجاح. سيظهر المحل في الدليل بعد مراجعته والموافقة عليه.

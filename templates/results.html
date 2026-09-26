@@ -492,21 +492,6 @@
     margin:5px 0 9px;
 }
 
-.no-business-images,
-.business-cover,
-.place-image,
-.image-wrapper,
-.no-image {
-    display: none !important;
-}
-
-.no-business-images-final,
-.image-wrapper,
-.place-image,
-.business-cover,
-.no-image {
-    display: none !important;
-}
 </style>
 
 </style>
@@ -785,25 +770,7 @@
 
                 <article class="place-card"
                          data-open="{{ 'true' if is_place_open(place) else 'false' }}">
-
-                    {% if place.image %}
-
-                        <img
-                            src="{{ url_for('static', filename='uploads/' + place.image) }}"
-                            class="place-image"
-                            alt="{{ place.name }}"
-                        >
-
-                    {% else %}
-
-                        <div class="no-image">
-                            📍
-                        </div>
-
-                    {% endif %}
-
-
-                    <div class="card-content">
+<div class="card-content">
 
                         <span class="category">
                             {{ place.category }}

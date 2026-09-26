@@ -540,20 +540,15 @@ footer strong {
     margin:5px 0 9px;
 }
 
-.no-business-images,
-.business-cover,
-.place-image,
-.image-wrapper,
-.no-image {
-    display: none !important;
-}
-
-.no-business-images-final,
-.image-wrapper,
-.place-image,
-.business-cover,
-.no-image {
-    display: none !important;
+.verified-badge {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 12px;
+    font-weight: 800;
 }
 </style>
 
@@ -641,36 +636,16 @@ href="{{ url_for('home') }}"
 <article class="place-card">
 
 
-<div class="image-wrapper">
-
-{% if place.image %}
-
-<img
-class="place-image"
-src="{{ url_for(
-    'static',
-    filename='uploads/' + place.image
-) }}"
-alt="{{ place.name }}"
->
-
-{% else %}
-
-<div class="no-image">
-لا توجد صورة لهذا المكان
-</div>
-
-{% endif %}
-
-</div>
-
-
 <div class="content">
 
 
 <span class="category">
 {{ place.category }}
 </span>
+
+{% if place.verified_at %}
+<span class="verified-badge">✓ موثّق من الإدارة</span>
+{% endif %}
 
 
 <h1>

@@ -3,7 +3,8 @@ import psycopg2
 from psycopg2.extras import DictCursor
 import os
 import re
-import uuid
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 app = Flask(__name__)
 
@@ -37,13 +38,6 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "change-me-before-production")
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-UPLOAD_FOLDER = "static/uploads"
-
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "webp"}
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 # =========================
@@ -148,20 +142,10 @@ def cover_image(place):
 
 app.jinja_env.globals["cover_image"] = cover_image
 
-def allowed_file(filename):
-    return (
-        filename
-        and "." in filename
-        and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-    )
-
-
 
 def is_place_open(place):
-    from datetime import datetime
-
     try:
-        now = datetime.now()
+        now = datetime.now(ZoneInfo("Africa/Algiers"))
         day = str(now.isoweekday())
         days = (place["working_days"] or "1,2,3,4,5,6").split(",")
 
@@ -578,73 +562,64 @@ def add_place():
 
     if request.method == "POST":
 
-        name = request.form.get(
-            "name", ""
-        ).strip()
+        name = request.form.get("name", "").strip()
+        category = request.form.get("category", "").strip()
+        address = request.form.get("address", "").strip()
+        phone = request.form.get("phone", "").strip()
+        description = request.form.get("description", "").strip()
+        latitude_raw = request.form.get("latitude", "").strip()
+        longitude_raw = request.form.get("longitude", "").strip()
 
-        category = request.form.get(
-            "category", ""
-        ).strip()
+        opening_time = request.form.get("opening_time", "08:00").strip() or "08:00"
+        closing_time = request.form.get("closing_time", "18:00").strip() or "18:00"
+        working_days = request.form.get("working_days", "1,2,3,4,5,6").strip() or "1,2,3,4,5,6"
 
-        address = request.form.get(
-            "address", ""
-        ).strip()
+        if not name or not category or not address:
+            return render_template(
+                "add.html",
+                error="يرجى إدخال اسم المحل والتصنيف والعنوان."
+            ), 400
 
-        phone = request.form.get(
-            "phone", ""
-        ).strip()
+        if len(name) > 150 or len(category) > 100 or len(address) > 300:
+            return render_template(
+                "add.html",
+                error="بعض البيانات أطول من الحد المسموح."
+            ), 400
 
-        description = request.form.get(
-            "description", ""
-        ).strip()
-
-        latitude = request.form.get(
-            "latitude", ""
-        ).strip()
-
-        longitude = request.form.get(
-            "longitude", ""
-        ).strip()
-
-        # تحويل الإحداثيات
         try:
-            latitude = float(latitude)
-        except:
+            latitude = float(latitude_raw) if latitude_raw else None
+        except (TypeError, ValueError):
             latitude = None
 
         try:
-            longitude = float(longitude)
-        except:
+            longitude = float(longitude_raw) if longitude_raw else None
+        except (TypeError, ValueError):
             longitude = None
 
-        # الصورة
-        image_filename = None
-
-        image = request.files.get("image")
-
-        if image and image.filename:
-
-            if allowed_file(image.filename):
-
-                extension = image.filename.rsplit(
-                    ".", 1
-                )[1].lower()
-
-                image_filename = (
-                    str(uuid.uuid4())
-                    + "."
-                    + extension
-                )
-
-                image_path = os.path.join(
-                    app.config["UPLOAD_FOLDER"],
-                    image_filename
-                )
-
-                image.save(image_path)
-
-        # إرسال طلب للمراجعة بدل النشر المباشر
         conn = get_db()
+
+        duplicate = conn.execute("""
+            SELECT 1
+            FROM places
+            WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))
+              AND LOWER(TRIM(address)) = LOWER(TRIM(?))
+            LIMIT 1
+        """, (name, address)).fetchone()
+
+        pending_duplicate = conn.execute("""
+            SELECT 1
+            FROM place_requests
+            WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))
+              AND LOWER(TRIM(address)) = LOWER(TRIM(?))
+            LIMIT 1
+        """, (name, address)).fetchone()
+
+        if duplicate or pending_duplicate:
+            conn.close()
+            return render_template(
+                "add.html",
+                error="هذا المحل موجود مسبقًا أو لديه طلب قيد المراجعة."
+            ), 409
 
         conn.execute("""
             INSERT INTO place_requests
@@ -677,10 +652,7 @@ def add_place():
         conn.commit()
         conn.close()
 
-
-        return redirect(
-            url_for("add_place", submitted="1")
-        )
+        return redirect(url_for("add_place", submitted="1"))
 
     return render_template("add.html")
 
@@ -940,54 +912,6 @@ def edit_place(place_id):
         except:
             longitude = None
 
-        # الصورة الحالية
-        image_filename = place_data["image"]
-
-        image = request.files.get("image")
-
-        if image and image.filename:
-
-            if allowed_file(image.filename):
-
-                extension = image.filename.rsplit(
-                    ".",
-                    1
-                )[1].lower()
-
-                new_image_filename = (
-                    str(uuid.uuid4())
-                    + "."
-                    + extension
-                )
-
-                new_image_path = os.path.join(
-                    app.config["UPLOAD_FOLDER"],
-                    new_image_filename
-                )
-
-                image.save(
-                    new_image_path
-                )
-
-                # حذف الصورة القديمة
-                if image_filename:
-
-                    old_image_path = os.path.join(
-                        app.config["UPLOAD_FOLDER"],
-                        image_filename
-                    )
-
-                    if os.path.exists(
-                        old_image_path
-                    ):
-                        os.remove(
-                            old_image_path
-                        )
-
-                image_filename = (
-                    new_image_filename
-                )
-
         # تحديث البيانات
         conn.execute("""
             UPDATE places
@@ -999,7 +923,6 @@ def edit_place(place_id):
                 description = ?,
                 latitude = ?,
                 longitude = ?,
-                image = ?,
                 opening_time = ?,
                 closing_time = ?,
                 working_days = ?,
@@ -1014,7 +937,6 @@ def edit_place(place_id):
             description,
             latitude,
             longitude,
-            image_filename,
             request.form.get("opening_time", "08:00").strip() or "08:00",
             request.form.get("closing_time", "18:00").strip() or "18:00",
             request.form.get("working_days", "1,2,3,4,5,6").strip() or "1,2,3,4,5,6",
@@ -1027,7 +949,7 @@ def edit_place(place_id):
         conn.close()
 
         return redirect(
-            url_for("add_place", submitted="1")
+            url_for("place", place_id=place_id)
         )
 
     conn.close()
@@ -1238,6 +1160,23 @@ def approve_place_request(request_id):
     """, (request_id,)).fetchone()
 
     if item:
+        duplicate = conn.execute("""
+            SELECT 1
+            FROM places
+            WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))
+              AND LOWER(TRIM(address)) = LOWER(TRIM(?))
+            LIMIT 1
+        """, (item["name"], item["address"])).fetchone()
+
+        if duplicate:
+            conn.execute(
+                "DELETE FROM place_requests WHERE id = ?",
+                (request_id,)
+            )
+            conn.commit()
+            conn.close()
+            return redirect(url_for("admin"))
+
         conn.execute("""
             INSERT INTO places
             (
@@ -1600,6 +1539,8 @@ def seed_additional_batna_places():
 
 # تهيئة قاعدة البيانات وتحميل البيانات عند تشغيل Gunicorn أو التطبيق محليًا
 init_db()
+init_place_requests_table()
+ensure_place_requests_columns()
 seed_initial_places()
 seed_additional_batna_places()
 
