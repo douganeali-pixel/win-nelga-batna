@@ -1426,8 +1426,10 @@ def seed_additional_batna_places():
 
 
 
+# تهيئة قاعدة البيانات وتحميل البيانات عند تشغيل Gunicorn أو التطبيق محليًا
+init_db()
+seed_initial_places()
+seed_additional_batna_places()
+
 if __name__ == "__main__":
-    init_db()
-    seed_initial_places()
-    seed_additional_batna_places()
     app.run(debug=True)
