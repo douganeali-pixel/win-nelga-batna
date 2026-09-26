@@ -534,6 +534,38 @@
     border-color: #dc2626;
 }
 
+.filter-box {
+    max-width: 1000px;
+    margin: 15px auto 0;
+    padding: 0 10px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.filter-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 15px;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #111827;
+    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    font-family: "Cairo", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.filter-button:hover {
+    background: #111;
+    color: white;
+    border-color: #111;
+}
+
 .main-action-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -650,10 +682,39 @@
         📍 قريب مني
     </button>
 
+    <a href="/search"
+       class="search-extra-button">
+        🔄 كل الأماكن
+    </a>
+
     <a href="/"
        class="search-extra-button">
         🏠 الرئيسية
     </a>
+</div>
+
+<div class="filter-box">
+
+    <a href="/search"
+       class="filter-button">
+        الكل
+    </a>
+
+    <a href="/search?category=سيارات"
+       class="filter-button">
+        🚗 سيارات
+    </a>
+
+    <a href="/search?category=مطاعم وحلويات"
+       class="filter-button">
+        🍽 مطاعم وحلويات
+    </a>
+
+    <a href="/search?category=خدمات"
+       class="filter-button">
+        🛠 خدمات
+    </a>
+
 </div>
 
 
