@@ -152,7 +152,7 @@ button{
 {% for place in places %}
 
 <a class="place"
-   href="{{ url_for('place_detail', place_id=place.id) }}"
+   href="{{ url_for('place', place_id=place.id) }}"
    data-lat="{{ place.latitude }}"
    data-lng="{{ place.longitude }}">
 
