@@ -494,6 +494,37 @@ def add_place():
 # البحث
 # =========================
 
+# =========================
+# قريب مني
+# =========================
+
+@app.route("/nearby")
+def nearby():
+
+    conn = get_db()
+
+    places = conn.execute("""
+        SELECT
+            places.*,
+            ROUND(COALESCE(AVG(reviews.rating), 0), 1) AS average_rating,
+            COUNT(reviews.id) AS review_count
+        FROM places
+        LEFT JOIN reviews
+            ON places.id = reviews.place_id
+        WHERE places.latitude IS NOT NULL
+          AND places.longitude IS NOT NULL
+        GROUP BY places.id
+        ORDER BY places.id DESC
+    """).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "nearby.html",
+        places=places
+    )
+
+
 @app.route("/search")
 def search():
 

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قريب مني - وين نلقى باتنة؟</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:"Cairo",sans-serif;
+    background:#0b0b0b;
+    color:#fff;
+}
+
+.container{
+    width:92%;
+    max-width:900px;
+    margin:auto;
+    padding:25px 0 50px;
+}
+
+.back{
+    display:inline-block;
+    color:#ccc;
+    text-decoration:none;
+    margin-bottom:20px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.header h1{
+    margin:0;
+    font-size:30px;
+}
+
+.header p{
+    color:#999;
+}
+
+.location-box{
+    background:#151515;
+    border:1px solid #292929;
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+    margin-bottom:25px;
+}
+
+button{
+    border:0;
+    border-radius:12px;
+    padding:13px 22px;
+    background:#fff;
+    color:#000;
+    font-family:inherit;
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.status{
+    margin-top:12px;
+    color:#aaa;
+    font-size:14px;
+}
+
+.place{
+    display:block;
+    text-decoration:none;
+    color:#fff;
+    background:#151515;
+    border:1px solid #292929;
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:14px;
+}
+
+.place:hover{
+    border-color:#555;
+}
+
+.place-name{
+    font-size:20px;
+    font-weight:800;
+}
+
+.category{
+    color:#aaa;
+    font-size:14px;
+    margin:4px 0;
+}
+
+.address{
+    color:#ccc;
+    font-size:14px;
+}
+
+.distance{
+    margin-top:10px;
+    font-weight:700;
+}
+
+.rating{
+    color:#aaa;
+    font-size:13px;
+    margin-top:5px;
+}
+
+#places{
+    display:none;
+}
+
+.empty{
+    text-align:center;
+    color:#999;
+    padding:30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a class="back" href="{{ url_for('home') }}">← العودة للرئيسية</a>
+
+<div class="header">
+<h1>📍 قريب مني</h1>
+<p>اعثر على الأماكن الأقرب إلى موقعك الحالي</p>
+</div>
+
+<div class="location-box">
+
+<button onclick="getLocation()">📍 تحديد موقعي</button>
+
+<div id="status" class="status">
+اضغط على الزر للسماح بالوصول إلى موقعك
+</div>
+
+</div>
+
+<div id="places">
+
+{% for place in places %}
+
+<a class="place"
+   href="{{ url_for('place_detail', place_id=place.id) }}"
+   data-lat="{{ place.latitude }}"
+   data-lng="{{ place.longitude }}">
+
+<div class="place-name">{{ place.name }}</div>
+
+<div class="category">{{ place.category }}</div>
+
+<div class="address">📍 {{ place.address }}</div>
+
+<div class="distance">📏 حساب المسافة...</div>
+
+<div class="rating">
+⭐ {{ place.average_rating or 0 }}
+· {{ place.review_count or 0 }} تقييم
+</div>
+
+</a>
+
+{% else %}
+
+<div class="empty">
+لا توجد أماكن تحتوي على إحداثيات حالياً.
+</div>
+
+{% endfor %}
+
+</div>
+</div>
+
+<script>
+
+function distanceInKm(lat1,lon1,lat2,lon2){
+
+    const R=6371;
+
+    const dLat=(lat2-lat1)*Math.PI/180;
+    const dLon=(lon2-lon1)*Math.PI/180;
+
+    const a=
+        Math.sin(dLat/2)*Math.sin(dLat/2)+
+        Math.cos(lat1*Math.PI/180)*
+        Math.cos(lat2*Math.PI/180)*
+        Math.sin(dLon/2)*Math.sin(dLon/2);
+
+    const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+
+    return R*c;
+}
+
+function getLocation(){
+
+    const status=document.getElementById("status");
+
+    if(!navigator.geolocation){
+
+        status.textContent="المتصفح لا يدعم تحديد الموقع.";
+        return;
+    }
+
+    status.textContent="جاري تحديد موقعك...";
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            const userLat=position.coords.latitude;
+            const userLng=position.coords.longitude;
+
+            const container=document.getElementById("places");
+            const places=Array.from(container.querySelectorAll(".place"));
+
+            places.forEach(function(place){
+
+                const lat=parseFloat(place.dataset.lat);
+                const lng=parseFloat(place.dataset.lng);
+
+                const distance=distanceInKm(
+                    userLat,
+                    userLng,
+                    lat,
+                    lng
+                );
+
+                place.dataset.distance=distance;
+
+                const element=place.querySelector(".distance");
+
+                if(distance<1){
+
+                    element.textContent=
+                        "📏 "+Math.round(distance*1000)+" متر";
+
+                }else{
+
+                    element.textContent=
+                        "📏 "+distance.toFixed(1)+" كم";
+                }
+
+            });
+
+            places.sort(function(a,b){
+
+                return parseFloat(a.dataset.distance)-
+                       parseFloat(b.dataset.distance);
+
+            });
+
+            places.forEach(function(place){
+
+                container.appendChild(place);
+
+            });
+
+            container.style.display="block";
+
+            status.textContent=
+                "تم تحديد موقعك. تم ترتيب الأماكن من الأقرب إلى الأبعد.";
+
+        },
+
+        function(error){
+
+            if(error.code===1){
+
+                status.textContent=
+                    "تم رفض الوصول إلى الموقع. اسمح للموقع باستخدام موقعك.";
+
+            }else if(error.code===2){
+
+                status.textContent=
+                    "تعذر تحديد موقعك حالياً.";
+
+            }else{
+
+                status.textContent=
+                    "حدث خطأ أثناء تحديد الموقع.";
+            }
+
+        },
+
+        {
+            enableHighAccuracy:true,
+            timeout:10000,
+            maximumAge:60000
+        }
+    );
+}
+
+</script>
+
+</body>
+</html>
