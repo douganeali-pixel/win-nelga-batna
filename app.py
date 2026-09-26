@@ -1212,6 +1212,21 @@ def add_review(place_id):
 # تشغيل التطبيق
 # =========================
 
+
+# =========================
+# تهيئة قاعدة البيانات
+# =========================
+
+try:
+    ensure_final_schema()
+except Exception as e:
+    print("Schema migration warning:", e)
+
+try:
+    seed_additional_batna_places()
+except Exception as e:
+    print("Seed warning:", e)
+
 if __name__ == "__main__":
 
     init_db()
