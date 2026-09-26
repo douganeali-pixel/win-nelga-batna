@@ -1396,6 +1396,7 @@ def seed_additional_batna_places():
     conn = get_db()
 
     for item in places:
+        print("SEED CHECK:", item["name"])
         exists = conn.execute(
             "SELECT id FROM places WHERE name = ?",
             (item["name"],)
