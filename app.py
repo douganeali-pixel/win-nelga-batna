@@ -1438,13 +1438,10 @@ def seed_additional_batna_places():
     conn.close()
 
 
-# تحميل المؤسسات الإضافية بعد تعريف الدالة
-try:
-    seed_additional_batna_places()
-except Exception as e:
-    print("Additional seed warning:", e)
 
 
 if __name__ == "__main__":
     init_db()
+    seed_initial_places()
+    seed_additional_batna_places()
     app.run(debug=True)
