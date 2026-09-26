@@ -661,6 +661,19 @@ alt="{{ place.name }}"
 {{ place.name }}
 </h1>
 
+{% if is_place_open(place) %}
+<div class="open-status open">● مفتوح الآن</div>
+{% else %}
+<div class="open-status closed">● مغلق الآن</div>
+{% endif %}
+
+<div class="hours-line">
+ساعات العمل:
+{{ place.opening_time or "08:00" }}
+-
+{{ place.closing_time or "18:00" }}
+</div>
+
 
 <div class="info">
 
