@@ -1233,20 +1233,6 @@ def add_review(place_id):
 
 
 # =========================
-# تهيئة قاعدة البيانات
-# =========================
-
-try:
-    ensure_final_schema()
-except Exception as e:
-    print("Schema migration warning:", e)
-
-    print("Seed warning:", e)
-
-
-
-
-
 def seed_additional_batna_places():
     places = [
         {
