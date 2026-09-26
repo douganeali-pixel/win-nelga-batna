@@ -528,59 +528,70 @@ def nearby():
 @app.route("/search")
 def search():
 
-    query = request.args.get(
-        "q", ""
-    ).strip()
-
-    category = request.args.get(
-        "category", ""
-    ).strip()
+    query = request.args.get("q", "").strip()
+    category = request.args.get("category", "").strip()
 
     conn = get_db()
 
+    base_query = """
+        SELECT
+            places.*,
+            ROUND(COALESCE(AVG(reviews.rating), 0), 1) AS average_rating,
+            COUNT(reviews.id) AS review_count
+        FROM places
+        LEFT JOIN reviews
+            ON places.id = reviews.place_id
+    """
+
     if category:
 
-        places = conn.execute("""
-            SELECT
-                places.*,
-                ROUND(COALESCE(AVG(reviews.rating), 0), 1) AS average_rating,
-                COUNT(reviews.id) AS review_count
-            FROM places
-            LEFT JOIN reviews
-                ON places.id = reviews.place_id
+        places = conn.execute(
+            base_query + """
             WHERE places.category LIKE ?
             GROUP BY places.id
             ORDER BY places.id DESC
-        """, (
-            f"%{category}%",
-        )).fetchall()
+            """,
+            (f"%{category}%",)
+        ).fetchall()
 
         title = category
 
-    else:
+    elif query:
 
-        places = conn.execute("""
-            SELECT
-                places.*,
-                ROUND(COALESCE(AVG(reviews.rating), 0), 1) AS average_rating,
-                COUNT(reviews.id) AS review_count
-            FROM places
-            LEFT JOIN reviews
-                ON places.id = reviews.place_id
-            WHERE places.name LIKE ?
-               OR places.category LIKE ?
-               OR places.address LIKE ?
-               OR places.description LIKE ?
+        search_value = f"%{query}%"
+
+        places = conn.execute(
+            base_query + """
+            WHERE
+                places.name LIKE ?
+                OR places.category LIKE ?
+                OR places.address LIKE ?
+                OR places.description LIKE ?
+                OR places.phone LIKE ?
             GROUP BY places.id
             ORDER BY places.id DESC
-        """, (
-            f"%{query}%",
-            f"%{query}%",
-            f"%{query}%",
-            f"%{query}%"
-        )).fetchall()
+            """,
+            (
+                search_value,
+                search_value,
+                search_value,
+                search_value,
+                search_value
+            )
+        ).fetchall()
 
         title = query
+
+    else:
+
+        places = conn.execute(
+            base_query + """
+            GROUP BY places.id
+            ORDER BY places.id DESC
+            """
+        ).fetchall()
+
+        title = "جميع الأماكن"
 
     conn.close()
 
