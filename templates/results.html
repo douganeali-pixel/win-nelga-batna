@@ -566,6 +566,12 @@
     border-color: #111;
 }
 
+.filter-button.active-filter {
+    background: #166534;
+    color: white;
+    border-color: #166534;
+}
+
 .main-action-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -715,6 +721,12 @@
         🛠 خدمات
     </a>
 
+    <button type="button"
+            id="open-now-filter"
+            class="filter-button">
+        🟢 مفتوح الآن
+    </button>
+
 </div>
 
 
@@ -755,7 +767,8 @@
 
             {% for place in places %}
 
-                <article class="place-card">
+                <article class="place-card"
+                         data-open="{{ 'true' if is_place_open(place) else 'false' }}">
 
                     {% if place.image %}
 
@@ -1029,6 +1042,47 @@ font-size:12px;
 <script>
 const y=document.getElementById("current-year");
 if(y)y.textContent=new Date().getFullYear();
+</script>
+
+<!-- OPEN NOW FILTER -->
+<script>
+(function () {
+
+    const button = document.getElementById("open-now-filter");
+
+    if (!button) return;
+
+    let active = false;
+
+    button.addEventListener("click", function () {
+
+        active = !active;
+
+        const cards = document.querySelectorAll(".place-card");
+
+        cards.forEach(function (card) {
+
+            const isOpen = card.dataset.open === "true";
+
+            if (active && !isOpen) {
+                card.style.display = "none";
+            } else {
+                card.style.display = "";
+            }
+
+        });
+
+        if (active) {
+            button.classList.add("active-filter");
+            button.textContent = "🔴 عرض الكل";
+        } else {
+            button.classList.remove("active-filter");
+            button.textContent = "🟢 مفتوح الآن";
+        }
+
+    });
+
+})();
 </script>
 
 </body>
