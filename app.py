@@ -212,6 +212,11 @@ def init_db():
         ADD COLUMN IF NOT EXISTS verified_at TIMESTAMP
     """)
 
+    conn.execute("""
+        ALTER TABLE places
+        ADD COLUMN IF NOT EXISTS map_code TEXT
+    """)
+
     conn.commit()
     conn.close()
 
@@ -317,6 +322,20 @@ def seed_initial_places():
     conn = get_db()
 
     try:
+
+        # بيانات الخرائط الموثقة
+        map_codes = {
+            "SM Turbo": "G5H6+5HQ, Batna, Algeria",
+        }
+
+        for place_name, map_code in map_codes.items():
+            conn.execute("""
+                UPDATE places
+                SET map_code = ?,
+                    verified_at = CURRENT_TIMESTAMP
+                WHERE name = ?
+            """, (map_code, place_name))
+
 
         # تحديث إحداثيات المؤسسات الموجودة
         for place_name, (lat, lng) in coordinates.items():
