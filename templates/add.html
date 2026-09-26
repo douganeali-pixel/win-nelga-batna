@@ -300,6 +300,12 @@
 
 <div class="container">
 
+    {% if request.args.get("submitted") == "1" %}
+    <div class="success-message">
+        تم إرسال طلبك بنجاح. سيظهر المحل في الدليل بعد مراجعته والموافقة عليه.
+    </div>
+    {% endif %}
+
     <div class="title">
 
         <h1>
@@ -317,7 +323,6 @@
 
         <form
             method="POST"
-            enctype="multipart/form-data"
         >
 
             <div class="row">
@@ -482,20 +487,6 @@
             </div>
 
 
-            <div class="field">
-
-
-
-                <div class="upload-box">
-
-
-
-                    <div>
-                        اختر صورة واضحة للمكان
-                    </div>
-
-                </div>
-
             </div>
 
 
@@ -550,7 +541,7 @@
                 type="submit"
                 class="submit-button"
             >
-                حفظ المكان
+                إرسال طلب إضافة المحل
             </button>
 
         </form>

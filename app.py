@@ -188,6 +188,26 @@ def open_status(place):
 app.jinja_env.globals["is_place_open"] = is_place_open
 
 
+
+def init_place_requests_table():
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS place_requests (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            category TEXT NOT NULL,
+            address TEXT NOT NULL,
+            phone TEXT,
+            description TEXT,
+            latitude DOUBLE PRECISION,
+            longitude DOUBLE PRECISION,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
 def init_db():
 
     conn = get_db()
@@ -603,11 +623,11 @@ def add_place():
 
                 image.save(image_path)
 
-        # حفظ المكان
+        # إرسال طلب للمراجعة بدل النشر المباشر
         conn = get_db()
 
-        cursor = conn.execute("""
-            INSERT INTO places
+        conn.execute("""
+            INSERT INTO place_requests
             (
                 name,
                 category,
@@ -615,12 +635,9 @@ def add_place():
                 phone,
                 description,
                 latitude,
-                longitude,
-                image,
-                source,
-                verified_at
+                longitude
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
             name,
             category,
@@ -628,22 +645,15 @@ def add_place():
             phone,
             description,
             latitude,
-            longitude,
-            image_filename,
-            request.form.get("source", "إضافة يدوية").strip() or "إضافة يدوية"
+            longitude
         ))
 
         conn.commit()
-
-        place_id = cursor.lastrowid
-
         conn.close()
 
+
         return redirect(
-            url_for(
-                "place",
-                place_id=place_id
-            )
+            url_for("add_place", submitted="1")
         )
 
     return render_template("add.html")
@@ -991,10 +1001,7 @@ def edit_place(place_id):
         conn.close()
 
         return redirect(
-            url_for(
-                "place",
-                place_id=place_id
-            )
+            url_for("add_place", submitted="1")
         )
 
     conn.close()
@@ -1151,17 +1158,111 @@ def admin():
         ORDER BY places.id DESC
     """).fetchall()
 
+    place_requests = conn.execute("""
+        SELECT *
+        FROM place_requests
+        ORDER BY id DESC
+    """).fetchall()
+
     conn.close()
 
     return render_template(
         "admin.html",
-        places=places
+        places=places,
+        place_requests=place_requests
     )
 
 
 # =========================
 # تسجيل الخروج
 # =========================
+
+
+@app.route("/admin/requests")
+def admin_requests():
+    if not session.get("admin"):
+        return redirect(url_for("admin_login"))
+
+    conn = get_db()
+    requests = conn.execute("""
+        SELECT *
+        FROM place_requests
+        ORDER BY id DESC
+    """).fetchall()
+    conn.close()
+
+    return render_template(
+        "admin.html",
+        places=[],
+        place_requests=requests
+    )
+
+
+@app.route("/admin/requests/<int:request_id>/approve", methods=["POST"])
+def approve_place_request(request_id):
+    if not session.get("admin"):
+        return redirect(url_for("admin_login"))
+
+    conn = get_db()
+
+    item = conn.execute("""
+        SELECT *
+        FROM place_requests
+        WHERE id = ?
+    """, (request_id,)).fetchone()
+
+    if item:
+        conn.execute("""
+            INSERT INTO places
+            (
+                name,
+                category,
+                address,
+                phone,
+                description,
+                latitude,
+                longitude,
+                source,
+                verified_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        """, (
+            item["name"],
+            item["category"],
+            item["address"],
+            item["phone"],
+            item["description"],
+            item["latitude"],
+            item["longitude"],
+            "Submitted by business owner"
+        ))
+
+        conn.execute(
+            "DELETE FROM place_requests WHERE id = ?",
+            (request_id,)
+        )
+
+        conn.commit()
+
+    conn.close()
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/requests/<int:request_id>/reject", methods=["POST"])
+def reject_place_request(request_id):
+    if not session.get("admin"):
+        return redirect(url_for("admin_login"))
+
+    conn = get_db()
+    conn.execute(
+        "DELETE FROM place_requests WHERE id = ?",
+        (request_id,)
+    )
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("admin"))
+
 
 @app.route("/admin/logout")
 def admin_logout():
