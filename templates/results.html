@@ -1044,6 +1044,61 @@ const y=document.getElementById("current-year");
 if(y)y.textContent=new Date().getFullYear();
 </script>
 
+<!-- NEARBY SEARCH -->
+<script>
+(function () {
+
+    const button = document.getElementById("nearby-search");
+
+    if (!button) return;
+
+    button.addEventListener("click", function () {
+
+        if (!navigator.geolocation) {
+            alert("المتصفح لا يدعم تحديد الموقع.");
+            return;
+        }
+
+        button.textContent = "📍 جاري تحديد موقعك...";
+        button.disabled = true;
+
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                window.location.href =
+                    "/nearby?lat=" +
+                    encodeURIComponent(lat) +
+                    "&lng=" +
+                    encodeURIComponent(lng);
+
+            },
+            function (error) {
+
+                button.disabled = false;
+                button.textContent = "📍 قريب مني";
+
+                if (error.code === 1) {
+                    alert("يجب السماح للمتصفح بالوصول إلى موقعك.");
+                } else {
+                    alert("تعذر تحديد موقعك. حاول مرة أخرى.");
+                }
+
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 60000
+            }
+        );
+
+    });
+
+})();
+</script>
+
 <!-- OPEN NOW FILTER -->
 <script>
 (function () {
