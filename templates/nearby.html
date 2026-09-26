@@ -109,9 +109,92 @@ button{
 }
 
 .rating{
-    color:#aaa;
+    color:#f5b301;
     font-size:13px;
     margin-top:5px;
+}
+
+.open-status{
+    display:inline-flex;
+    align-items:center;
+    padding:4px 9px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    margin-top:8px;
+}
+
+.open-status.open{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.open-status.closed{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.hours{
+    color:#999;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.card-actions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:7px;
+    margin-top:14px;
+}
+
+.card-action{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    padding:9px 5px;
+    border-radius:9px;
+    font-family:"Cairo",sans-serif;
+    font-size:11px;
+    font-weight:800;
+}
+
+.call-action{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.whatsapp-action{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.map-action{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.details-action{
+    display:block;
+    margin-top:8px;
+    text-align:center;
+    text-decoration:none;
+    background:#fff;
+    color:#111;
+    border-radius:9px;
+    padding:9px;
+    font-size:12px;
+    font-weight:800;
+}
+
+@media(max-width:600px){
+    .card-actions{
+        grid-template-columns:1fr 1fr 1fr;
+    }
+
+    .card-action{
+        font-size:10px;
+    }
 }
 
 #places{
@@ -151,14 +234,26 @@ button{
 
 {% for place in places %}
 
-<a class="place"
-   href="{{ url_for('place', place_id=place.id) }}"
-   data-lat="{{ place.latitude }}"
-   data-lng="{{ place.longitude }}">
+<div class="place"
+     data-lat="{{ place.latitude }}"
+     data-lng="{{ place.longitude }}">
 
 <div class="place-name">{{ place.name }}</div>
 
 <div class="category">{{ place.category }}</div>
+
+{% if is_place_open(place) %}
+<div class="open-status open">🟢 مفتوح الآن</div>
+{% else %}
+<div class="open-status closed">🔴 مغلق الآن</div>
+{% endif %}
+
+<div class="hours">
+ساعات العمل:
+{{ place.opening_time or "08:00" }}
+-
+{{ place.closing_time or "18:00" }}
+</div>
 
 <div class="address">📍 {{ place.address }}</div>
 
@@ -169,7 +264,40 @@ button{
 · {{ place.review_count or 0 }} تقييم
 </div>
 
+<div class="card-actions">
+
+{% if place.phone %}
+<a class="card-action call-action"
+   href="tel:{{ place.phone }}">
+📞 اتصال
 </a>
+
+<a class="card-action whatsapp-action"
+   href="https://wa.me/213{{ place.phone|replace(' ','')|replace('-','')|replace('.','')|replace('0','',1) }}"
+   target="_blank"
+   rel="noopener">
+💬 واتساب
+</a>
+{% else %}
+<span></span>
+<span></span>
+{% endif %}
+
+<a class="card-action map-action"
+   href="https://www.google.com/maps/dir/?api=1&destination={{ place.latitude }},{{ place.longitude }}"
+   target="_blank"
+   rel="noopener">
+🗺 الاتجاهات
+</a>
+
+</div>
+
+<a class="details-action"
+   href="{{ url_for('place', place_id=place.id) }}">
+👁 مشاهدة التفاصيل
+</a>
+
+</div>
 
 {% else %}
 
