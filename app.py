@@ -414,12 +414,70 @@ def home():
         ORDER BY places.id DESC
     """).fetchall()
 
+    # إحصائيات وتصنيفات الصفحة الرئيسية
+    category_rows = conn.execute("""
+        SELECT category, COUNT(*) AS count
+        FROM places
+        WHERE category IS NOT NULL AND TRIM(category) <> ''
+        GROUP BY category
+        ORDER BY count DESC, category ASC
+    """).fetchall()
+
+    total_places = conn.execute("SELECT COUNT(*) FROM places").fetchone()[0]
+    total_reviews = conn.execute("SELECT COUNT(*) FROM reviews").fetchone()[0]
+    total_categories = conn.execute("""
+        SELECT COUNT(DISTINCT category)
+        FROM places
+        WHERE category IS NOT NULL AND TRIM(category) <> ''
+    """).fetchone()[0]
+
     conn.close()
 
     return render_template(
         "index.html",
-        places=places
+        places=places,
+        category_rows=category_rows,
+        total_places=total_places,
+        total_reviews=total_reviews,
+        total_categories=total_categories
     )
+
+
+
+# =========================
+# API إحصائيات
+# =========================
+
+@app.route("/api/stats")
+def api_stats():
+    conn = get_db()
+
+    total_places = conn.execute(
+        "SELECT COUNT(*) FROM places"
+    ).fetchone()[0]
+
+    total_reviews = conn.execute(
+        "SELECT COUNT(*) FROM reviews"
+    ).fetchone()[0]
+
+    categories = conn.execute("""
+        SELECT category, COUNT(*) AS count
+        FROM places
+        WHERE category IS NOT NULL AND TRIM(category) <> ''
+        GROUP BY category
+        ORDER BY count DESC, category ASC
+    """).fetchall()
+
+    conn.close()
+
+    return {
+        "places": total_places,
+        "reviews": total_reviews,
+        "categories": [
+            {"name": row["category"], "count": row["count"]}
+            for row in categories
+        ]
+    }
 
 
 # =========================
@@ -1167,3 +1225,198 @@ seed_initial_places()
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+# =========================
+# مؤسسات باتنة الإضافية
+# =========================
+
+def seed_additional_batna_places():
+    places = [
+        {
+            "name": "SARL TOUFIK TRAILER",
+            "category": "سيارات وقطع غيار",
+            "address": "BP 76 Lot 35 Zone Industrielle Kechida, Batna",
+            "phone": "033 92 25 00 / 033 92 13 71",
+        },
+        {
+            "name": "ABIDI HABIB",
+            "category": "سيارات وقطع غيار",
+            "address": "Route de Biskra, en face de la station Naftal, Batna",
+            "phone": "033 81 82 13",
+        },
+        {
+            "name": "SARL GLOBAL MOTORS",
+            "category": "سيارات وقطع غيار",
+            "address": "Route de Constantine, lot n°26, Batna",
+            "phone": "033 81 59 50",
+        },
+        {
+            "name": "ADEL BENFLIS",
+            "category": "سيارات وقطع غيار",
+            "address": "Route de Tazoult, en face ITEF, Batna",
+            "phone": "033 98 01 79",
+        },
+        {
+            "name": "CIRTA CARGO ALGERIE",
+            "category": "نقل وخدمات",
+            "address": "Cité Bouaka, Fesdis, Batna",
+            "phone": "033 98 01 55",
+        },
+        {
+            "name": "VAG PARTS",
+            "category": "سيارات وقطع غيار",
+            "address": "Lot Abdessemed, Cité Chouhada, Batna",
+            "phone": "033 86 08 98",
+        },
+        {
+            "name": "MEDSAMA CAMIONS",
+            "category": "سيارات وقطع غيار",
+            "address": "Zone Industrielle Kechida, Batna",
+            "phone": "033 92 10 80",
+        },
+        {
+            "name": "SAADI AUTO EXTRA",
+            "category": "سيارات وقطع غيار",
+            "address": "Rue KL, Cité El Moudjahid, Route de Biskra, Batna",
+            "phone": "033 81 88 18",
+        },
+        {
+            "name": "SOCIETE ALGERIENNE DES FILTRES (SAFI)",
+            "category": "سيارات وقطع غيار",
+            "address": "Zone Industrielle, Lot B N°167, Kechida, Batna",
+            "phone": "033 92 15 50",
+        },
+        {
+            "name": "SsangYong JAC.JMC.HAFEI",
+            "category": "سيارات وقطع غيار",
+            "address": "09 Rue Chennaf Ammar, La Verdure, Batna",
+            "phone": "030 36 16 85",
+        },
+        {
+            "name": "KASROU AUTO",
+            "category": "سيارات وقطع غيار",
+            "address": "Route de Constantine, Fesdis, Batna",
+            "phone": "033 80 84 20",
+        },
+        {
+            "name": "LES FRERES NOUFFIDJ",
+            "category": "سيارات وقطع غيار",
+            "address": "246 Logements Gare Routière, Batna",
+            "phone": "033 84 37 22",
+        },
+        {
+            "name": "SARL BATNA MOTORS",
+            "category": "سيارات",
+            "address": "Cité Ravin Bleu, Kechida, Batna",
+            "phone": "033 92 11 85",
+        },
+        {
+            "name": "PHARMACIE DE L'UNIVERSITE",
+            "category": "أطباء وصحة",
+            "address": "01 Cité Tamechit, Boulevard KL, Batna",
+            "phone": "033 82 46 62",
+        },
+        {
+            "name": "PHARMACIE BENOUDINA",
+            "category": "أطباء وصحة",
+            "address": "21 Avenue de l'Indépendance, Batna",
+            "phone": "033 80 60 72",
+        },
+        {
+            "name": "NOUAOURA HIBA",
+            "category": "أطباء وصحة",
+            "address": "Avenue de l'Indépendance, Batna",
+            "phone": "033 81 39 62",
+        },
+        {
+            "name": "Pharmacie MEHRI",
+            "category": "أطباء وصحة",
+            "address": "Allées Salah Nezzar, Batna",
+            "phone": "033 85 43 75",
+        },
+        {
+            "name": "Pharmacie BOUGUENNA",
+            "category": "أطباء وصحة",
+            "address": "Rue Hocine Abd Essalam, Batna",
+            "phone": "033 85 17 97",
+        },
+        {
+            "name": "CLINIQUE EL-IHSSANIETE",
+            "category": "أطباء وصحة",
+            "address": "Cité Kechida, Batna",
+            "phone": "033 92 37 98",
+        },
+        {
+            "name": "CAAR - BATNA",
+            "category": "خدمات",
+            "address": "02 Hadj Abdessamed, Batna",
+            "phone": "033 80 76 14",
+        },
+        {
+            "name": "IMPRIMERIE GUERFI AMAR ET CIE",
+            "category": "خدمات",
+            "address": "Zone Industrielle, BP 154 Cité Kechida, Batna",
+            "phone": "033 92 13 25",
+        },
+        {
+            "name": "Traduction BEN ENASSIB",
+            "category": "خدمات",
+            "address": "Hamid Bouznaba, Bt 6, 1er étage, porte 08, Batna",
+            "phone": "033 86 52 22",
+        },
+        {
+            "name": "TROIS D Informatique",
+            "category": "إلكترونيات",
+            "address": "8 Rue Sidi Hanni, Batna",
+            "phone": "033 80 20 68",
+        },
+        {
+            "name": "VISION PUB",
+            "category": "خدمات",
+            "address": "Cité 5 Juillet, Batna",
+            "phone": "033 85 48 60",
+        },
+        {
+            "name": "LE PALAIS DU GATEAU TRADITIONNEL",
+            "category": "مطاعم وحلويات",
+            "address": "Avenue de l'Indépendance, Batna",
+            "phone": "030 36 26 54",
+        },
+        {
+            "name": "LAITERIE DES AURES",
+            "category": "مطاعم وحلويات",
+            "address": "Zone Industrielle Kechida, Batna",
+            "phone": "033 92 16 60",
+        },
+    ]
+
+    conn = get_db()
+
+    for item in places:
+        exists = conn.execute(
+            "SELECT id FROM places WHERE name = ?",
+            (item["name"],)
+        ).fetchone()
+
+        if not exists:
+            conn.execute("""
+                INSERT INTO places
+                (name, category, address, phone, description,
+                 opening_time, closing_time, working_days,
+                 source, verified_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                item["name"],
+                item["category"],
+                item["address"],
+                item["phone"],
+                "بيانات مؤسسة من دليل تجاري حديث. يرجى التحقق من المعلومات قبل الزيارة.",
+                "08:00",
+                "18:00",
+                "1,2,3,4,5,6",
+                "AlgeriaYP - Sep 2026",
+                "2026-09-26"
+            ))
+
+    conn.close()

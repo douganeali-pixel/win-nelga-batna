@@ -1593,6 +1593,107 @@ const y=document.getElementById("current-year");
 if(y)y.textContent=new Date().getFullYear();
 </script>
 
+
+<section id="batna-stats" class="batna-stats" dir="rtl">
+    <div class="stats-title">
+        <span>📍</span>
+        <div>
+            <h2>دليل باتنة</h2>
+            <p>ابحث عن المؤسسات والخدمات القريبة منك</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <strong>{{ total_places }}</strong>
+            <span>مكان</span>
+        </div>
+
+        <div class="stat-card">
+            <strong>{{ total_categories }}</strong>
+            <span>تصنيف</span>
+        </div>
+
+        <div class="stat-card">
+            <strong>{{ total_reviews }}</strong>
+            <span>تقييم</span>
+        </div>
+    </div>
+
+    {% if category_rows %}
+    <div class="dynamic-categories">
+        <h3>التصنيفات الأكثر توفرًا</h3>
+        <div class="category-pills">
+            {% for row in category_rows %}
+            <a href="{{ url_for('search', category=row.category) }}">
+                {{ row.category }}
+                <b>{{ row.count }}</b>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+.batna-stats{
+    margin:25px auto;
+    max-width:1100px;
+    padding:22px;
+    border-radius:22px;
+    background:#111;
+    color:#fff;
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+.stats-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+}
+.stats-title span{font-size:32px}
+.stats-title h2{margin:0}
+.stats-title p{margin:4px 0 0;opacity:.7}
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+.stat-card{
+    text-align:center;
+    padding:18px 10px;
+    border-radius:16px;
+    background:#1d1d1d;
+}
+.stat-card strong{
+    display:block;
+    font-size:30px;
+}
+.stat-card span{opacity:.75}
+.dynamic-categories{margin-top:22px}
+.dynamic-categories h3{margin-bottom:12px}
+.category-pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+}
+.category-pills a{
+    text-decoration:none;
+    color:#fff;
+    background:#242424;
+    padding:9px 13px;
+    border-radius:999px;
+}
+.category-pills b{
+    margin-right:5px;
+    opacity:.7;
+}
+@media(max-width:650px){
+    .stats-grid{grid-template-columns:1fr 1fr}
+    .stat-card:last-child{grid-column:1/-1}
+}
+</style>
+
 </body>
 
 </html>
