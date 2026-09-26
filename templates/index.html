@@ -1192,6 +1192,12 @@ href="{{ url_for('add_place') }}"
 
 
 <article class="place-card">
+    <img
+        class="business-cover"
+        src="{{ cover_image(place) }}"
+        alt="{{ place.name }}"
+        loading="lazy"
+    >
 
 
 <div class="image-wrapper">
