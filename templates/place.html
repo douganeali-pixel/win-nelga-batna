@@ -740,7 +740,7 @@ href="tel:{{ place.phone }}"
 {% if place.phone %}
 <a
 class="action whatsapp-button"
-href="https://wa.me/213{{ place.phone|replace(' ','')|replace('-','')|replace('.','')|replace('0','',1) }}"
+href="{{ whatsapp_url(place.phone) }}"
 target="_blank"
 >
 واتساب

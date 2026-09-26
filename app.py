@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import psycopg2
 from psycopg2.extras import DictCursor
 import os
+import re
 import uuid
 
 app = Flask(__name__)
@@ -110,6 +111,23 @@ class DBConnection:
 def get_db():
     return DBConnection()
 
+
+def whatsapp_url(phone):
+    phone = (phone or "").strip()
+    if not phone:
+        return ""
+    first = re.split(r"[\\/|,;]+", phone)[0].strip()
+    digits = re.sub(r"\\D", "", first)
+    if digits.startswith("0"):
+        digits = "213" + digits[1:]
+    elif not digits.startswith("213"):
+        digits = "213" + digits
+    if len(digits) < 10:
+        return ""
+    return f"https://wa.me/{digits}"
+
+
+app.jinja_env.globals["whatsapp_url"] = whatsapp_url
 
 def allowed_file(filename):
     return (
