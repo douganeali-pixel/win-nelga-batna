@@ -635,22 +635,6 @@ footer strong {
     font-size:12px;
     margin:5px 0 9px;
 }
-
-.no-business-images,
-.business-cover,
-.place-image,
-.image-wrapper,
-.no-image {
-    display: none !important;
-}
-
-.no-business-images-final,
-.image-wrapper,
-.place-image,
-.business-cover,
-.no-image {
-    display: none !important;
-}
 </style>
 
 </style>
@@ -1210,6 +1194,27 @@ href="{{ url_for('add_place') }}"
 <article class="place-card">
 
 
+<div class="image-wrapper">
+
+
+{% if place.image %}
+
+<img
+class="place-image"
+src="{{ url_for('static', filename='uploads/' + place.image) }}"
+alt="{{ place.name }}"
+>
+
+{% else %}
+
+<div class="no-image">
+لا توجد صورة
+</div>
+
+{% endif %}
+
+
+</div>
 
 
 <div class="place-content">

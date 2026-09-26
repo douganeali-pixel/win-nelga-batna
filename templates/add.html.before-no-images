@@ -453,7 +453,7 @@
                     وصف المكان
                 </label>
 
-
+                
 <div class="form-group">
     <label for="opening_time">وقت الفتح</label>
     <input type="time" id="opening_time" name="opening_time"
@@ -484,11 +484,17 @@
 
             <div class="field">
 
-
+                <label>
+                    صورة المكان
+                </label>
 
                 <div class="upload-box">
 
-
+                    <input
+                        type="file"
+                        name="image"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
 
                     <div>
                         اختر صورة واضحة للمكان

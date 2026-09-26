@@ -206,22 +206,6 @@ button{
     color:#999;
     padding:30px;
 }
-
-.no-business-images,
-.business-cover,
-.place-image,
-.image-wrapper,
-.no-image {
-    display: none !important;
-}
-
-.no-business-images-final,
-.image-wrapper,
-.place-image,
-.business-cover,
-.no-image {
-    display: none !important;
-}
 </style>
 </head>
 

@@ -347,14 +347,6 @@ footer strong {
 
 }
 
-
-.no-business-images-final,
-.image-wrapper,
-.place-image,
-.business-cover,
-.no-image {
-    display: none !important;
-}
 </style>
 
 </head>
@@ -606,9 +598,15 @@ alt="{{ place.name }}"
 
 <div class="file-box">
 
+<label>
+تغيير الصورة
+</label>
 
-
-
+<input
+type="file"
+name="image"
+accept=".jpg,.jpeg,.png,.webp"
+>
 
 <p style="color:#64748b;font-size:13px;">
 اترك الحقل فارغًا للاحتفاظ بالصورة الحالية
