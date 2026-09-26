@@ -394,6 +394,18 @@ def seed_initial_places():
 # الصفحة الرئيسية
 # =========================
 
+
+@app.route("/health")
+def health():
+    try:
+        conn = get_db()
+        conn.execute("SELECT 1").fetchone()
+        conn.close()
+        return {"status": "ok", "database": "ok"}
+    except Exception as e:
+        return {"status": "error", "database": "error"}, 500
+
+
 @app.route("/")
 def home():
 
@@ -640,6 +652,13 @@ def search():
 
     query = request.args.get("q", "").strip()
     category = request.args.get("category", "").strip()
+
+    # تنظيف مدخلات البحث والتصنيف
+    if len(query) > 200:
+        query = query[:200]
+
+    if len(category) > 100:
+        category = category[:100]
 
     conn = get_db()
 
