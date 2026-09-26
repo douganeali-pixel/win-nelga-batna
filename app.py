@@ -1241,29 +1241,11 @@ try:
 except Exception as e:
     print("Schema migration warning:", e)
 
-try:
-    seed_additional_batna_places()
-except Exception as e:
     print("Seed warning:", e)
 
-if __name__ == "__main__":
-
-    init_db()
-
-    app.run(
-        debug=True
-    )
-
-init_db()
-seed_initial_places()
-
-if __name__ == "__main__":
-    app.run(debug=True)
 
 
-# =========================
-# مؤسسات باتنة الإضافية
-# =========================
+
 
 def seed_additional_batna_places():
     places = [
@@ -1454,3 +1436,15 @@ def seed_additional_batna_places():
             ))
 
     conn.close()
+
+
+# تحميل المؤسسات الإضافية بعد تعريف الدالة
+try:
+    seed_additional_batna_places()
+except Exception as e:
+    print("Additional seed warning:", e)
+
+
+if __name__ == "__main__":
+    init_db()
+    app.run(debug=True)
