@@ -302,9 +302,42 @@ def seed_initial_places():
         )
     ]
 
+    # إحداثيات المؤسسات الموثقة
+    coordinates = {
+        "Massinissa Lounge": (35.552770, 6.176680),
+    }
+
+    # إحداثيات موثقة للمؤسسات
+    coordinates = {
+        "SARL TIRSAM": (35.565170, 6.167940),
+        "EURL MAHDI AUTO": (35.561515, 6.160970),
+        "Massinissa Lounge": (35.552770, 6.176680),
+    }
+
     conn = get_db()
 
     try:
+
+        # تحديث إحداثيات المؤسسات الموجودة
+        for place_name, (lat, lng) in coordinates.items():
+            conn.execute("""
+                UPDATE places
+                SET latitude = ?,
+                    longitude = ?,
+                    verified_at = CURRENT_TIMESTAMP
+                WHERE name = ?
+            """, (lat, lng, place_name))
+
+        # تحديث الإحداثيات للمؤسسات الموجودة
+        for place_name, (lat, lng) in coordinates.items():
+            conn.execute("""
+                UPDATE places
+                SET latitude = ?,
+                    longitude = ?,
+                    verified_at = CURRENT_TIMESTAMP
+                WHERE name = ?
+            """, (lat, lng, place_name))
+
         for name, category, address, phone, description, source in places:
             existing = conn.execute(
                 "SELECT id FROM places WHERE name = ? LIMIT 1",
