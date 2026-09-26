@@ -154,6 +154,7 @@ app.jinja_env.globals["is_place_open"] = is_place_open
 def init_db():
 
     conn = get_db()
+    inserted = 0
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS places (
@@ -218,7 +219,8 @@ def init_db():
     """)
 
     conn.commit()
-    conn.close()
+    print("SEED INSERTED:", inserted)
+
 
 
 
@@ -320,6 +322,7 @@ def seed_initial_places():
     }
 
     conn = get_db()
+    inserted = 0
 
     try:
 
@@ -384,9 +387,11 @@ def seed_initial_places():
                     description,
                     source
                 ))
+            inserted += 1
 
         conn.commit()
     finally:
+    print("SEED INSERTED:", inserted)
         conn.close()
 
 
@@ -399,7 +404,9 @@ def seed_initial_places():
 def health():
     try:
         conn = get_db()
+    inserted = 0
         conn.execute("SELECT 1").fetchone()
+    print("SEED INSERTED:", inserted)
         conn.close()
         return {"status": "ok", "database": "ok"}
     except Exception as e:
@@ -410,6 +417,7 @@ def health():
 def home():
 
     conn = get_db()
+    inserted = 0
 
     places = conn.execute("""
         SELECT
@@ -443,6 +451,7 @@ def home():
         WHERE category IS NOT NULL AND TRIM(category) <> ''
     """).fetchone()[0]
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return render_template(
@@ -463,6 +472,7 @@ def home():
 @app.route("/api/stats")
 def api_stats():
     conn = get_db()
+    inserted = 0
 
     total_places = conn.execute(
         "SELECT COUNT(*) FROM places"
@@ -480,6 +490,7 @@ def api_stats():
         ORDER BY count DESC, category ASC
     """).fetchall()
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return {
@@ -568,6 +579,7 @@ def add_place():
 
         # حفظ المكان
         conn = get_db()
+    inserted = 0
 
         cursor = conn.execute("""
             INSERT INTO places
@@ -600,6 +612,7 @@ def add_place():
 
         place_id = cursor.lastrowid
 
+    print("SEED INSERTED:", inserted)
         conn.close()
 
         return redirect(
@@ -624,6 +637,7 @@ def add_place():
 def nearby():
 
     conn = get_db()
+    inserted = 0
 
     places = conn.execute("""
         SELECT
@@ -639,6 +653,7 @@ def nearby():
         ORDER BY places.id DESC
     """).fetchall()
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return render_template(
@@ -661,6 +676,7 @@ def search():
         category = category[:100]
 
     conn = get_db()
+    inserted = 0
 
     base_query = """
         SELECT
@@ -722,6 +738,7 @@ def search():
 
         title = "جميع الأماكن"
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return render_template(
@@ -739,6 +756,7 @@ def search():
 def place(place_id):
 
     conn = get_db()
+    inserted = 0
 
     # بيانات المكان
     place_data = conn.execute("""
@@ -751,6 +769,7 @@ def place(place_id):
 
     if place_data is None:
 
+    print("SEED INSERTED:", inserted)
         conn.close()
 
         return "المحل غير موجود", 404
@@ -785,6 +804,7 @@ def place(place_id):
     else:
         average = 0
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return render_template(
@@ -812,6 +832,7 @@ def edit_place(place_id):
         )
 
     conn = get_db()
+    inserted = 0
 
     place_data = conn.execute("""
         SELECT *
@@ -823,6 +844,7 @@ def edit_place(place_id):
 
     if place_data is None:
 
+    print("SEED INSERTED:", inserted)
         conn.close()
 
         return "المحل غير موجود", 404
@@ -951,6 +973,7 @@ def edit_place(place_id):
 
         conn.commit()
 
+    print("SEED INSERTED:", inserted)
         conn.close()
 
         return redirect(
@@ -960,6 +983,7 @@ def edit_place(place_id):
             )
         )
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return render_template(
@@ -985,6 +1009,7 @@ def delete_place(place_id):
         )
 
     conn = get_db()
+    inserted = 0
 
     place_data = conn.execute("""
         SELECT *
@@ -996,6 +1021,7 @@ def delete_place(place_id):
 
     if place_data is None:
 
+    print("SEED INSERTED:", inserted)
         conn.close()
 
         return "المحل غير موجود", 404
@@ -1030,6 +1056,7 @@ def delete_place(place_id):
 
     conn.commit()
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return redirect(
@@ -1045,6 +1072,7 @@ def delete_place(place_id):
 def all_map():
 
     conn = get_db()
+    inserted = 0
 
     places = conn.execute("""
         SELECT
@@ -1060,6 +1088,7 @@ def all_map():
         ORDER BY places.id DESC
     """).fetchall()
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return render_template(
@@ -1101,6 +1130,7 @@ def admin():
         )
 
     conn = get_db()
+    inserted = 0
 
     places = conn.execute("""
         SELECT
@@ -1114,6 +1144,7 @@ def admin():
         ORDER BY places.id DESC
     """).fetchall()
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return render_template(
@@ -1182,6 +1213,7 @@ def add_review(place_id):
         )
 
     conn = get_db()
+    inserted = 0
 
     # التأكد من وجود المكان
     exists = conn.execute("""
@@ -1194,6 +1226,7 @@ def add_review(place_id):
 
     if exists is None:
 
+    print("SEED INSERTED:", inserted)
         conn.close()
 
         return "المحل غير موجود", 404
@@ -1217,6 +1250,7 @@ def add_review(place_id):
 
     conn.commit()
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
     return redirect(
@@ -1394,6 +1428,7 @@ def seed_additional_batna_places():
     ]
 
     conn = get_db()
+    inserted = 0
 
     for item in places:
         print("SEED CHECK:", item["name"])
@@ -1421,7 +1456,9 @@ def seed_additional_batna_places():
                 "AlgeriaYP - Sep 2026",
                 "2026-09-26"
             ))
+            inserted += 1
 
+    print("SEED INSERTED:", inserted)
     conn.close()
 
 
