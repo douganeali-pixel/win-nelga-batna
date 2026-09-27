@@ -597,7 +597,216 @@ def seed_initial_places():
             "0671263367",
             "محل تجاري في باتنة.",
             "Business listing - Sep 2026"
+        ,
+        (
+            "OPTICIEN BOUDOUNET",
+            "بصريات",
+            "150 Logts No. 83, Route de Biskra, Batna",
+            "033817624",
+            "بصريات ونظارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "LOOK OPTIC",
+            "بصريات",
+            "Allées Salah Nezzar, Batna",
+            "03380361100",
+            "بصريات ونظارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "MEDICA OPTIC",
+            "بصريات",
+            "17 Allées Ben Boulaid, Batna",
+            "033804660",
+            "بصريات ونظارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "Optique LYNA",
+            "بصريات",
+            "Cité des 84 Logts n°25, Batna",
+            "033853915",
+            "بصريات ونظارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "SUPER OPTIQUE",
+            "بصريات",
+            "Immeuble El-Mostakbel, Batna",
+            "",
+            "بصريات ونظارات.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "PHARMACIE DE L'UNIVERSITE",
+            "صيدليات",
+            "01 Cité Tamechit Boulevard KL, Batna",
+            "033824662",
+            "صيدلية.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "PHARMACIE BENOUDINA",
+            "صيدليات",
+            "21 Avenue de l'Indépendance, Batna",
+            "033806072",
+            "صيدلية.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "NOUAOURA HIBA",
+            "صيدليات",
+            "Avenue de l'Indépendance, Batna",
+            "033813962",
+            "صيدلية.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "Pharmacie MEHRI",
+            "صيدليات",
+            "Allées Salah Nezzar, Batna",
+            "033854375",
+            "صيدلية.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "Pharmacie BOUGUENNA",
+            "صيدليات",
+            "Rue Hocine Abd essalam, Batna",
+            "033851797",
+            "صيدلية.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "ZEGHICHE Zineb",
+            "صيدليات",
+            "Cité 50 Logements, Batna",
+            "033812203",
+            "صيدلية.",
+            "AlgeriaYP - Sep 2026"
+        ),
+        (
+            "Energy fit",
+            "رياضة",
+            "Unnamed Road, Batna",
+            "0660212325",
+            "قاعة لياقة بدنية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Nabile gym",
+            "رياضة",
+            "Batna, Algeria",
+            "0542677929",
+            "قاعة رياضية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Nounou Fitness",
+            "رياضة",
+            "Batna, Algeria",
+            "0696810541",
+            "قاعة لياقة بدنية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Papeterie librairie Guerfi",
+            "مكتبات وقرطاسية",
+            "20 Avenue de l'Indépendance, Batna",
+            "0550507750",
+            "مكتبة وقرطاسية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Librairie Papeterie GUERFI 3",
+            "مكتبات وقرطاسية",
+            "Batna 05000",
+            "0542524805",
+            "مكتبة وقرطاسية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "مكتبة الاندلس الخدمات الجامعية",
+            "مكتبات وقرطاسية",
+            "Route de Biskra, Batna",
+            "0660244563",
+            "مكتبة وخدمات جامعية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Belvie Supermarché",
+            "تجارة ومحلات",
+            "N31, Batna 05000",
+            "",
+            "متجر مواد غذائية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "الخاوة ماركت",
+            "تجارة ومحلات",
+            "Batna 05000",
+            "0664160184",
+            "متجر مواد غذائية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "École El-Wafa - مدرسة الوفاء",
+            "تعليم",
+            "Batna, Algeria",
+            "0661464701",
+            "مؤسسة تعليمية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Albayan Academy",
+            "تعليم",
+            "Route Nationale N31, Batna",
+            "0561615555",
+            "أكاديمية لتعليم اللغات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Hotel CH Chaker",
+            "فنادق",
+            "Lot N°47 Avenue de l'Indépendance, Batna",
+            "033853067",
+            "فندق في باتنة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Beghami Optique",
+            "بصريات",
+            "Batna, Algeria",
+            "033851600",
+            "بصريات ونظارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Nour hair salon",
+            "تجميل",
+            "Batna, Algeria",
+            "0669600240",
+            "صالون تجميل وحلاقة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Elite Femme Maison de Beauté",
+            "تجميل",
+            "Rue 19 Juin 1965, Batna",
+            "0675063898",
+            "مركز تجميل.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Khezzar t optique",
+            "بصريات",
+            "Rue de la Mosquée, Batna",
+            "0770828740",
+            "بصريات ونظارات.",
+            "Business listing - Sep 2026"
         )
+    )
     ]
 
     # إحداثيات المؤسسات الموثقة
