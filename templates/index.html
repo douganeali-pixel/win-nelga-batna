@@ -651,6 +651,311 @@ footer strong {
 .no-image {
     display: none !important;
 }
+
+/* =========================================================
+   BATNA HERO DESIGN
+   New visual layer — functionality unchanged
+========================================================= */
+
+body {
+    background: #080b10;
+}
+
+header {
+    position: relative;
+    min-height: 760px;
+    padding: 18px 20px 170px !important;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            rgba(3, 12, 24, .48),
+            rgba(3, 12, 24, .62)
+        ),
+        url("/static/images/batna-bg.jpg") center center / cover no-repeat !important;
+    color: white;
+}
+
+header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(2, 15, 30, .72) 0%,
+            rgba(2, 15, 30, .12) 28%,
+            rgba(2, 15, 30, .18) 60%,
+            rgba(2, 8, 18, .78) 100%
+        );
+    pointer-events: none;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+}
+
+/* TOP NAV */
+.nav {
+    min-height: 64px;
+    margin-bottom: 110px !important;
+    padding: 8px 18px;
+    border-radius: 18px;
+    background: rgba(3, 17, 33, .78);
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 12px 35px rgba(0,0,0,.25);
+    backdrop-filter: blur(14px);
+}
+
+.logo {
+    font-size: 27px !important;
+    font-weight: 900 !important;
+    letter-spacing: -.5px;
+}
+
+.logo::first-letter {
+    color: #f5b72f;
+}
+
+.nav-buttons {
+    gap: 8px !important;
+}
+
+.nav-button {
+    border: 1px solid rgba(255,255,255,.13) !important;
+    background: rgba(255,255,255,.055) !important;
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+}
+
+.nav-button:hover {
+    background: #f5b72f !important;
+    color: #111 !important;
+}
+
+/* HERO */
+.hero {
+    max-width: 1050px !important;
+}
+
+.hero h1 {
+    font-size: clamp(46px, 6vw, 78px) !important;
+    font-weight: 900 !important;
+    line-height: 1.18 !important;
+    text-shadow: 0 6px 30px rgba(0,0,0,.55);
+}
+
+.hero p {
+    font-size: 21px !important;
+    font-weight: 600 !important;
+    margin: 16px 0 34px !important;
+    text-shadow: 0 3px 15px rgba(0,0,0,.65);
+}
+
+/* SEARCH */
+.search {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 9px !important;
+    border-radius: 24px !important;
+    background: rgba(255,255,255,.95) !important;
+    box-shadow:
+        0 18px 55px rgba(0,0,0,.35),
+        0 0 0 1px rgba(255,255,255,.3);
+}
+
+.search input {
+    font-size: 18px !important;
+    padding: 18px 22px !important;
+    color: #111 !important;
+}
+
+.search button {
+    min-width: 125px;
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: #f5b72f !important;
+    color: #111 !important;
+    font-weight: 900 !important;
+    font-size: 17px !important;
+    box-shadow: 0 5px 18px rgba(245,183,47,.35);
+}
+
+.search button:hover {
+    background: #ffd05b !important;
+    transform: translateY(-1px);
+}
+
+/* MAIN OVER HERO */
+.container {
+    position: relative;
+    z-index: 5;
+    max-width: 1400px !important;
+    margin-top: -125px !important;
+    padding-bottom: 55px !important;
+}
+
+/* QUICK ACTIONS */
+.quick-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+}
+
+.quick-action {
+    min-height: 105px;
+    border-radius: 20px !important;
+    background: rgba(8, 16, 27, .82) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,.28) !important;
+    backdrop-filter: blur(12px);
+    transition: .25s ease;
+}
+
+.quick-action:hover {
+    transform: translateY(-5px);
+    border-color: rgba(245,183,47,.7) !important;
+}
+
+.quick-icon {
+    background: rgba(245,183,47,.16) !important;
+    color: #f5b72f !important;
+}
+
+/* SECTIONS */
+.section {
+    margin-top: 28px;
+    padding: 28px;
+    border-radius: 25px;
+    background: rgba(8, 15, 25, .90);
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: 0 18px 45px rgba(0,0,0,.28);
+    backdrop-filter: blur(12px);
+}
+
+.section-title {
+    color: white !important;
+    font-size: 27px !important;
+}
+
+.section-subtitle {
+    color: #b8c2d0 !important;
+}
+
+/* CATEGORY CARDS */
+.categories {
+    gap: 14px !important;
+}
+
+.category {
+    min-height: 125px;
+    border-radius: 18px !important;
+    background: rgba(255,255,255,.07) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,.13) !important;
+    box-shadow: none !important;
+    transition: .25s ease;
+}
+
+.category:hover {
+    transform: translateY(-5px);
+    background: rgba(245,183,47,.13) !important;
+    border-color: rgba(245,183,47,.55) !important;
+}
+
+.category-name {
+    color: white !important;
+    font-weight: 800 !important;
+}
+
+.category-icon {
+    box-shadow: 0 8px 22px rgba(0,0,0,.22);
+}
+
+/* PLACE CARDS */
+.places {
+    gap: 18px !important;
+}
+
+.place-card {
+    border-radius: 20px !important;
+    background: rgba(255,255,255,.97) !important;
+}
+
+/* FOOTER */
+footer {
+    background: #030b14 !important;
+    color: #9eabbc !important;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+
+    header {
+        min-height: 720px;
+        padding: 12px 10px 145px !important;
+    }
+
+    .nav {
+        margin-bottom: 75px !important;
+        padding: 8px 10px;
+    }
+
+    .logo {
+        font-size: 19px !important;
+    }
+
+    .nav-button {
+        padding: 8px 9px !important;
+        font-size: 10px !important;
+    }
+
+    .hero h1 {
+        font-size: 40px !important;
+    }
+
+    .hero p {
+        font-size: 14px !important;
+        line-height: 1.8 !important;
+    }
+
+    .search {
+        padding: 7px !important;
+    }
+
+    .search input {
+        font-size: 15px !important;
+        padding: 15px !important;
+    }
+
+    .container {
+        margin-top: -100px !important;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .section {
+        padding: 18px 12px;
+        border-radius: 20px;
+    }
+
+    .section-title {
+        font-size: 22px !important;
+    }
+
+    .categories {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .category {
+        min-height: 105px;
+    }
+}
+
 </style>
 
 </style>
