@@ -365,6 +365,150 @@ def seed_initial_places():
             "033 25 38 18 / 0561 52 52 36",
             "مركز خبرة ومراقبة تقنية للسيارات وخدمات الخبرة.",
             "SAE-EXACT - Sep 2026"
+        ),
+        (
+            "Tokyo",
+            "مطاعم وحلويات",
+            "Route de Biskra, Batna",
+            "0673948041",
+            "مطعم في باتنة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Crispello Burger",
+            "مطاعم وحلويات",
+            "Rue 19 Juin 1965, Batna",
+            "0559406067",
+            "مطعم برغر في باتنة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "مشاوي كشرود",
+            "مطاعم وحلويات",
+            "Rue 19 Juin 1965, Batna",
+            "0672926340",
+            "مطعم ومشاوي في باتنة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Salvado food batna",
+            "مطاعم وحلويات",
+            "Batna, Algeria",
+            "0665095679",
+            "بيتزا ومأكولات في باتنة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Akagi auto parts 05",
+            "سيارات وقطع غيار",
+            "Batna 05000",
+            "0671147648",
+            "محل قطع غيار السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Yakhlef Auto Parts",
+            "سيارات وقطع غيار",
+            "Cité El Fadjr, Batna",
+            "0562443990",
+            "محل قطع غيار السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "DOUADI AUTOMOTIVE",
+            "سيارات وقطع غيار",
+            "Zone industrielle N° 1, Batna",
+            "033222421",
+            "محل قطع غيار السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Scanner auto KHALED AN",
+            "صيانة السيارات",
+            "Rue El Oued Couvert, Batna",
+            "0672156335",
+            "تشخيص وفحص أعطال السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Rahim Auto",
+            "صيانة السيارات",
+            "حي النسيم، Batna",
+            "0799585176",
+            "ورشة إصلاح وصيانة السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Batna Car Tuning Performance",
+            "صيانة السيارات",
+            "Rue D.A, Batna",
+            "0673999272",
+            "خدمات تجهيز وتعديل السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Clinique médecin généraliste d'Al_Baraa",
+            "أطباء وصحة",
+            "Route de Biskra, Batna",
+            "0552471637",
+            "عيادة طب عام في باتنة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Cabinet de neurologie Dr Guehtar Sif Eddine",
+            "أطباء وصحة",
+            "Bloc 6, Batna",
+            "0561154952",
+            "عيادة طب الأعصاب الدكتور قهطار سيف الدين.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "LG Batna El Riadh",
+            "إلكترونيات",
+            "Cité Riadh, Batna",
+            "0657833034",
+            "محل إلكترونيات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "batna electro sat",
+            "إلكترونيات",
+            "Rue Ibn Sakhria Ahmed, Batna",
+            "",
+            "محل إلكترونيات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "DHD livraison express BATNA",
+            "خدمات",
+            "Batna",
+            "0777458319",
+            "خدمات التوصيل السريع.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Imar livraison",
+            "خدمات",
+            "Batna",
+            "0770794455",
+            "خدمات التوصيل.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Mehdi delivery",
+            "خدمات",
+            "Batna 05000",
+            "0798668162",
+            "خدمات التوصيل.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "RIZA Street",
+            "مطاعم وحلويات",
+            "Batna, Algeria",
+            "0799018288",
+            "مطعم ووجبات سريعة مع خدمة التوصيل في باتنة.",
+            "RIZA FOOD - Sep 2026"
         )
     ]
 
