@@ -278,6 +278,14 @@ def init_db():
         ADD COLUMN IF NOT EXISTS map_code TEXT
     """)
 
+    # تحديث المؤسسات القديمة إلى أيام العمل الافتراضية:
+    # السبت إلى الخميس، والجمعة مغلقة
+    conn.execute("""
+        UPDATE places
+        SET working_days = '1,2,3,4,6,7'
+        WHERE working_days = '1,2,3,4,5,6'
+    """)
+
     conn.commit()
     conn.close()
 
