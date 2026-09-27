@@ -1,11 +1,22 @@
 {
   "name": "وين نلقى باتنة؟",
   "short_name": "وين نلقى باتنة",
+  "id": "/",
   "description": "دليل الأماكن والخدمات في مدينة باتنة",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#080808",
   "theme_color": "#080808",
+  "orientation": "portrait",
   "dir": "rtl",
-  "lang": "ar"
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "/static/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
