@@ -509,7 +509,7 @@ def seed_initial_places():
             "0799018288",
             "مطعم ووجبات سريعة مع خدمة التوصيل في باتنة.",
             "RIZA FOOD - Sep 2026"
-        ,
+        ),
         (
             "JTECH Media Services",
             "إلكترونيات",
@@ -598,7 +598,6 @@ def seed_initial_places():
             "محل تجاري في باتنة.",
             "Business listing - Sep 2026"
         )
-    )
     ]
 
     # إحداثيات المؤسسات الموثقة
