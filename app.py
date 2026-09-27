@@ -509,7 +509,96 @@ def seed_initial_places():
             "0799018288",
             "مطعم ووجبات سريعة مع خدمة التوصيل في باتنة.",
             "RIZA FOOD - Sep 2026"
+        ,
+        (
+            "JTECH Media Services",
+            "إلكترونيات",
+            "مقابل المستشفى الجامعي، طريق الحرس الحضري العاشر، باتنة",
+            "0659391313 / 0773345120 / 0792008688",
+            "بيع وإصلاح الهواتف والحواسيب والإكسسوارات.",
+            "JTECH Media Services - Sep 2026"
+        ),
+        (
+            "Khadraoui Eectronics",
+            "إلكترونيات",
+            "Les Allées Menasria, Batna",
+            "0791839311",
+            "إلكترونيات وتقنيات الراديو.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "ALMAS",
+            "خدمات",
+            "24 Avenue de la République, Batna",
+            "0560426436",
+            "مركز تجاري في باتنة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "ZINE GERMAN PARTS",
+            "سيارات وقطع غيار",
+            "Batna, Algeria",
+            "",
+            "قطع غيار السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "CIM Dr Djaara Lotfi - عيادة النور للأشعة الطبية",
+            "أطباء وصحة",
+            "Route, Batna 05008",
+            "0771109145",
+            "عيادة وخدمات الأشعة الطبية.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Ibrahim électronique",
+            "إلكترونيات",
+            "Batna 05000",
+            "0770366062",
+            "محل إلكترونيات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "RedEx - Batna",
+            "خدمات",
+            "المجمع السكني مدور، باتنة",
+            "0770588418",
+            "خدمات التوصيل.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Candy Shop Batna",
+            "مطاعم وحلويات",
+            "Rue de la Verdure, Batna",
+            "",
+            "محل تجاري للمواد الغذائية والحلويات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Fifty Fifty Batna",
+            "مطاعم وحلويات",
+            "Batna, Algeria",
+            "0558019592",
+            "بيتزا ومأكولات سريعة.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Motor Oil & Auto Parts",
+            "سيارات وقطع غيار",
+            "Batna 05000",
+            "0662102307",
+            "زيوت وقطع غيار السيارات.",
+            "Business listing - Sep 2026"
+        ),
+        (
+            "Boutique haroun",
+            "خدمات",
+            "Batna, Algeria",
+            "0671263367",
+            "محل تجاري في باتنة.",
+            "Business listing - Sep 2026"
         )
+    )
     ]
 
     # إحداثيات المؤسسات الموثقة
