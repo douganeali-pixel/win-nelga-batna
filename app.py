@@ -1019,6 +1019,15 @@ def seed_initial_places():
     # إحداثيات المؤسسات الموثقة
     coordinates = {
         "Massinissa Lounge": (35.552770, 6.176680),
+        'Planet Food': (35.5559059, 6.1758151),
+        'Papeterie CHEBAANI': (35.5458300, 6.1707000),
+        'Medica Optic': (35.5563100, 6.1772900),
+        'PHARMACIE BENOUDINA': (35.5544040, 6.1767450),
+        'Crispello Burger': (35.5460000, 6.1770000),
+        'ABATTOIR AVICOLE BATNA': (35.5680027, 6.1571523),
+        'HÔTEL EL HAYAT': (35.5540493, 6.1757317),
+        'JTECH Media Services': (35.5547000, 6.1741900),
+        'La Petite Maison': (35.5559000, 6.1758200),
     }
 
     # إحداثيات موثقة للمؤسسات
@@ -1026,6 +1035,8 @@ def seed_initial_places():
         "SARL TIRSAM": (35.565170, 6.167940),
         "EURL MAHDI AUTO": (35.561515, 6.160970),
         "Massinissa Lounge": (35.552770, 6.176680),
+        'ABATTOIR AVICOLE BATNA': (35.5680027, 6.1571523),
+        'HÔTEL EL HAYAT': (35.5540493, 6.1757317),
     }
 
     conn = get_db()
