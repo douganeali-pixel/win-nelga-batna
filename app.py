@@ -597,7 +597,7 @@ def seed_initial_places():
             "0671263367",
             "محل تجاري في باتنة.",
             "Business listing - Sep 2026"
-        ,
+        ),
         (
             "OPTICIEN BOUDOUNET",
             "بصريات",
@@ -806,7 +806,6 @@ def seed_initial_places():
             "بصريات ونظارات.",
             "Business listing - Sep 2026"
         )
-    )
     ]
 
     # إحداثيات المؤسسات الموثقة
