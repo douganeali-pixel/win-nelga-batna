@@ -147,7 +147,7 @@ def is_place_open(place):
     try:
         now = datetime.now(ZoneInfo("Africa/Algiers"))
         day = str(now.isoweekday())
-        days = (place["working_days"] or "1,2,3,4,5,6").split(",")
+        days = (place["working_days"] or "1,2,3,4,6,7").split(",")
 
         if day not in [x.strip() for x in days]:
             return False
@@ -187,7 +187,7 @@ def init_place_requests_table():
             longitude DOUBLE PRECISION,
             opening_time TEXT DEFAULT '08:00',
             closing_time TEXT DEFAULT '18:00',
-            working_days TEXT DEFAULT '1,2,3,4,5,6',
+            working_days TEXT DEFAULT '1,2,3,4,6,7',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -200,7 +200,7 @@ def ensure_place_requests_columns():
     for column, definition in [
         ("opening_time", "TEXT DEFAULT '08:00'"),
         ("closing_time", "TEXT DEFAULT '18:00'"),
-        ("working_days", "TEXT DEFAULT '1,2,3,4,5,6'")
+        ("working_days", "TEXT DEFAULT '1,2,3,4,6,7'")
     ]:
         try:
             conn.execute(
@@ -229,7 +229,7 @@ def init_db():
             image TEXT,
             opening_time TEXT DEFAULT '08:00',
             closing_time TEXT DEFAULT '18:00',
-            working_days TEXT DEFAULT '1,2,3,4,5,6'
+            working_days TEXT DEFAULT '1,2,3,4,6,7'
         )
     """)
 
@@ -260,7 +260,7 @@ def init_db():
 
     conn.execute("""
         ALTER TABLE places
-        ADD COLUMN IF NOT EXISTS working_days TEXT DEFAULT '1,2,3,4,5,6'
+        ADD COLUMN IF NOT EXISTS working_days TEXT DEFAULT '1,2,3,4,6,7'
     """)
 
     conn.execute("""
@@ -1213,7 +1213,7 @@ def add_place():
 
         opening_time = request.form.get("opening_time", "08:00").strip() or "08:00"
         closing_time = request.form.get("closing_time", "18:00").strip() or "18:00"
-        working_days = request.form.get("working_days", "1,2,3,4,5,6").strip() or "1,2,3,4,5,6"
+        working_days = request.form.get("working_days", "1,2,3,4,6,7").strip() or "1,2,3,4,6,7"
 
         if not name or not category or not address:
             return render_template(
@@ -1580,7 +1580,7 @@ def edit_place(place_id):
             longitude,
             request.form.get("opening_time", "08:00").strip() or "08:00",
             request.form.get("closing_time", "18:00").strip() or "18:00",
-            request.form.get("working_days", "1,2,3,4,5,6").strip() or "1,2,3,4,5,6",
+            request.form.get("working_days", "1,2,3,4,6,7").strip() or "1,2,3,4,6,7",
             request.form.get("source", place_data["source"] if "source" in place_data.keys() else "إضافة يدوية").strip() or "إضافة يدوية",
             place_id
         ))
@@ -2166,7 +2166,7 @@ def seed_additional_batna_places():
                 "بيانات مؤسسة من دليل تجاري حديث. يرجى التحقق من المعلومات قبل الزيارة.",
                 "08:00",
                 "18:00",
-                "1,2,3,4,5,6",
+                "1,2,3,4,6,7",
                 "AlgeriaYP - Sep 2026",
                 "2026-09-26"
             ))
