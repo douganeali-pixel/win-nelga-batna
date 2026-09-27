@@ -805,6 +805,214 @@ def seed_initial_places():
             "0770828740",
             "بصريات ونظارات.",
             "Business listing - Sep 2026"
+        ),
+        (
+            'LYNATEC - Etablissement de la Formation Professionnelle',
+            'تعليم',
+            'Cité Belhassece, Route de Biskra, Batna',
+            '033307005',
+            'مؤسسة للتكوين المهني.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'GHOUFI Tours',
+            'سياحة وسفر',
+            '19 Cité des 84 Logts, Batna',
+            '030362362',
+            'وكالة سياحة وأسفار.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'HADJI Mobilier Ets HADJI Amar',
+            'أثاث',
+            'ZI BP 52, Allées Ben Boulaid, Batna',
+            '033921575',
+            'بيع الأثاث والتجهيزات.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'MOB-TIME',
+            'تجارة ومحلات',
+            "Avenue de l'Indépendance, Batna",
+            '033813413',
+            'محل تجاري.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'Papeterie CHEBAANI',
+            'مكتبات وقرطاسية',
+            '101 Allées Salah Nezzar, Batna',
+            '033818527',
+            'مكتبة وقرطاسية.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'TIMGAD VOYAGES',
+            'سياحة وسفر',
+            'Cité Maaref 50 Logts n°22, Batna',
+            '033860205',
+            'وكالة سياحة وأسفار.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'ARCHIMEDE FORMATION ET CONSULTING',
+            'تعليم',
+            "N°18, Rue de l'Aurès, Batna",
+            '033853036',
+            'تكوين واستشارات.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'EXOSAFE EURL',
+            'خدمات',
+            'Route de Constantine Lot n°26, Batna',
+            '033815950',
+            'مؤسسة خدمات.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'SARL SBGDE',
+            'خدمات',
+            'Zone Industrielle N°1 Lot N°30 Kéchida, Batna',
+            '033921026',
+            'مؤسسة وخدمات صناعية.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'DAR ERROUKHAM',
+            'خدمات',
+            'Oued Chaaba, Route de Biskra, Batna',
+            '030363868',
+            'مؤسسة خدمات.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'ETS BENABID AHMED',
+            'خدمات',
+            "Route de Biskra près de l'Université de Batna",
+            '033863614',
+            'مؤسسة تجارية وخدمات.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'ABATTOIR AVICOLE BATNA',
+            'تجارة ومحلات',
+            'Zone Industrielle Kéchida, Batna',
+            '033921389',
+            'مؤسسة لذبح وتجهيز الدواجن.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'CAFE EL DJAMILA',
+            'مطاعم وحلويات',
+            '12 Route de Biskra, Batna',
+            '033202011',
+            'مقهى.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'CLINIQUE EL-IHSSANIETE',
+            'أطباء وصحة',
+            'Cité Kéchida, Batna',
+            '033923798',
+            'عيادة طبية.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'DR BOUZID SAMI',
+            'أطباء وصحة',
+            'Allées Mohamed Boudiaf, Route de Tazzoult, Batna',
+            '033980179',
+            'طبيب.',
+            'AlgeriaYP - Sep 2026'
+        ),
+        (
+            'ميسون بصريات Mayssoune Optics',
+            'بصريات',
+            'Batna, Algeria',
+            '',
+            'محل بصريات ونظارات.',
+            'Local business listing - Sep 2026'
+        ),
+        (
+            'Ain Optics',
+            'بصريات',
+            'Batna, Algeria',
+            '0790827998',
+            'محل بصريات ونظارات.',
+            'Local business listing - Sep 2026'
+        ),
+        (
+            'BATNA PUB',
+            'خدمات',
+            'Allées Salah Nezzar, Batna',
+            '0778400455',
+            'خدمات وإعلانات.',
+            'Local business listing - Sep 2026'
+        ),
+        (
+            'HÔTEL EL HAYAT',
+            'فنادق',
+            '5 Rue Ben Badis, Batna',
+            '030146427',
+            'فندق في باتنة.',
+            'Local business listing - Sep 2026'
+        ),
+        (
+            'TIMGAD HÔTEL HAZEM',
+            'فنادق',
+            '01 Rue Ben Badis, Batna',
+            '0772332208',
+            'فندق في باتنة.',
+            'Local business listing - Sep 2026'
+        ),
+        (
+            'La Petite Maison',
+            'مطاعم وحلويات',
+            'Rue de la Verdure, Batna',
+            '0551916214',
+            'مطعم.',
+            'Local business listing - Sep 2026'
+        ),
+        (
+            'ADver - Digital Marketing Agency',
+            'خدمات',
+            'Benchaiba Center, Batna',
+            '0553534407',
+            'وكالة تسويق رقمي.',
+            'Local business listing - Sep 2026'
+        ),
+        (
+            'EURL PROTIMGAD UNIT.CERAMIQUE',
+            'تجارة ومحلات',
+            'Batna, Algeria',
+            '',
+            'صناعة وتجارة مواد السيراميك.',
+            'CREG - 2025'
+        ),
+        (
+            'EURL LUXETIL FESDIS',
+            'تجارة ومحلات',
+            'Batna, Algeria',
+            '',
+            'مؤسسة تجارية.',
+            'CREG - 2025'
+        ),
+        (
+            'SARL HOURIA LAB PARAPHARMA',
+            'أطباء وصحة',
+            'Batna, Algeria',
+            '',
+            'منتجات شبه صيدلانية.',
+            'Archive DZ - Sep 2026'
+        ),
+        (
+            'SARL CLINIQUE MOHAMED ESSADEK BATNA',
+            'أطباء وصحة',
+            'Batna, Algeria',
+            '',
+            'عيادة طبية.',
+            'Archive DZ - Sep 2026'
         )
     ]
 
